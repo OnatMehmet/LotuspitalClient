@@ -5,7 +5,8 @@ import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { inject } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { DoctorsComponent } from './components/doctors/doctors.component';
+import { PersonnelsComponent } from './components/personnels/personnels.component';
+import { PatientsComponent } from './components/patients/patients.component';
 
 export const routes: Routes = [
 
@@ -23,11 +24,12 @@ export const routes: Routes = [
                 component:HomeComponent
             },
             {
-                path:"doctors",
-                component:DoctorsComponent
-            },            {
+                path:"personnels",
+                component:PersonnelsComponent
+            },
+            {
                 path:"patients",
-                component:DoctorsComponent //PatientComponent
+                component:PatientsComponent
             }
         ]
     },

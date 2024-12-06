@@ -1,9 +1,10 @@
-export class DoctorModel{
+export class PersonnelModel{
     id: string ="";
     firstName: string ="";
     lastName: string ="";
     fullName: string ="";
-    department: any =""//DepartmentModel = new DepartmentModel();
+    department: DepartmentModel = new DepartmentModel();
+    departmentValue : number = 0;
 }
 
 export class DepartmentModel {

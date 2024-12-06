@@ -1,9 +1,9 @@
 <div class="mt-4 d-flex justify-content-between align-items-center">
-    <h3>Doktor Sayfası</h3>
+    <h3>Personel Sayfası</h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Doktorlar</li>
+          <li class="breadcrumb-item active" aria-current="page">Personel</li>
         </ol>
       </nav>
 </div>
@@ -14,11 +14,11 @@
       <div class="col-xl-9 col-lg-8 col-md-6 col-sm-12 col-12">
         <button class="btn btn-success" data-bs-toggle ="modal" data-bs-target ="#addModal">
           <i class="fa-solid fa-plus me-1"></i>
-          <span>Yeni Doktor</span>
+          <span>Yeni Personel</span>
         </button>
       </div>
       <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 position-relative">
-        <input type="search" class="form-control" placeholder="Doktor Ara">
+        <input type="search" class="form-control" [(ngModel)] ="search" placeholder="Personel Ara">
         <i class="fa-solid fa-magnifying-glass search"></i>
       </div>
     </div>
@@ -29,21 +29,21 @@
           <tr>
             <th>#</th>
             <th>Ad Soyad</th>
-            <th>Bölüm</th>
+            <th>Departman</th>
             <th>İşlemler</th>
           </tr>
         </thead>
         <tbody>
-          @for (doctor of doctors; track doctor) {
+          @for (personnel of personnels | personnel: search; track personnel) {
           <tr>
             <td>{{$index+1}}</td>
-            <td>{{doctor.fullName}}</td>
-            <td>{{doctor.department.name}}</td>
+            <td>{{personnel.fullName}}</td>
+            <td>{{personnel.department.name}}</td>
             <td>
-              <button class="btn btn-sm btn-outline-primary me-1">
+              <button (click)="get(personnel)" data-bs-toggle="modal"  data-bs-target="#updateModal" class="btn btn-sm btn-outline-primary me-2">
                 <i class="fa-solid fa-edit"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger me-1">
+              <button (click)="delete(personnel.id, personnel.fullName)" class="btn btn-sm btn-outline-danger me-2">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </td>
@@ -54,12 +54,12 @@
    </div>
 </div>
 
-<!-- Modal -->
+<!--  Create Modal -->
 <div class="modal fade" id="addModal" tabindex="-1"  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">Yeni Doktor Formu</h1>
+        <h1 class="modal-title fs-5">Yeni Personel </h1>
         <button type="button"  #addModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
       </div>
       <form #addForm="ngForm" formValidate autocomplete="off" (ngSubmit)="add(addForm)">
@@ -76,8 +76,48 @@
           </div>
           <div class="form-group mt-2">
             <label for ="department">Departman</label>
-            <select class="form-control" name="department" [(ngModel)] = "createModel.department" required="">
-              <option value="">Seçiniz</option>
+            <select class="form-control" name="department" [(ngModel)] = "createModel.departmentValue" required="">
+              <option [value]=0 >Seçiniz...</option>
+                @for (department of departments; track department) {
+                   <option [value]="department.value" >{{department.name}}</option>
+                }
+            </select>
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button> -->
+          <button type="submit" class="btn btn-success w-100">Kaydet</button>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<!--  Update  Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Personel Güncelleme </h1>
+        <button type="button"  #updateModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+      </div>
+      <form #updateForm="ngForm" formValidate autocomplete="off" (ngSubmit)="update(updateForm)">
+        <div class="modal-body">
+          <div class="form-group mt-2">
+            <label for="firstName">Adı </label>
+            <input class="form-control" type="text" [(ngModel)] ="updateModel.firstName" name="firstName" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="lastName" >Soyadı</label>
+            <input class="form-control" type="text" [(ngModel)] ="updateModel.lastName" name="lastName" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for ="department">Departman</label>
+            <select class="form-control" name="department" [(ngModel)] = "updateModel.departmentValue" required="">
+              <option value="">Seçiniz...</option>
                 @for (department of departments; track department) {
                    <option [value]="department.value" >{{department.name}}</option>
                 }
