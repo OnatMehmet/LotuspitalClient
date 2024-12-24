@@ -1,4 +1,4 @@
-import { GenderModel } from "./models/patient.model"
+
 import { DepartmentModel } from "./models/personnel.model"
 
 export const api: string  ="https://localhost:7157/api" //canlıya lınınca değişecek
