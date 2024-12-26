@@ -1,1 +1,33 @@
-<p>home works!</p>
+<div class="mt-4 d-flex justify-content-between align-items-center">
+    <h3> Lotuspital Evde Bakım Merkezine Hoşgeldiniz</h3>
+</div>
+
+<div class="mt-2">
+    <div class="row">
+
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm6 col-12 mt-1">
+            <label>Departman</label>
+            <select name="department" [(ngModel)]="selectedDepartmentValue" class="form-control">
+                <option [value]="0">Seçiniz..</option>
+                @for (department of departments; track department) {
+                <option [value]="department.value">{{department.name}}</option>
+                }
+            </select>
+        </div>
+        @if(selectedDepartmentValue > 0 ){
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm6 col-12 mt-1">
+            <label>Doktor</label>
+            <select name="doctor" [(ngModel)]="selectedDoctorId" class="form-control">
+                <option [value]="0">Seçiniz..</option>
+                @for (doctor of doctors; track doctor) {
+                <option [value]="doctor.id">{{doctor.fullName}}</option>
+                }
+            </select>
+        </div>
+        }
+    </div>
+
+    <div class="mt-2">
+            Burada Takvim Olacak
+    </div>
+</div>

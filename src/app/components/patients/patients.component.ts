@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormValidateDirective } from 'form-validate-angular';
 import { PatientPipe } from '../pipe/patient.pipe';
+import { genders } from '../../constants';
+
 
 @Component({
   selector: 'app-patient',
@@ -17,6 +19,7 @@ import { PatientPipe } from '../pipe/patient.pipe';
 })
 export class PatientsComponent implements OnInit {
   patients: PatientModel[] = [];
+  genders =  genders
   
   @ViewChild("addModalCloseBtn") addModalCloseBtn: ElementRef<HTMLButtonElement> | undefined;
   @ViewChild("updateModalCloseBtn") updateModalCloseBtn : ElementRef<HTMLButtonElement> | undefined;
