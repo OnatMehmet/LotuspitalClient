@@ -70,7 +70,7 @@
    </div>
 </div>
 
-<div class="container">
+<!-- <div class="container">
   <h2>Angular DataTable Örneği</h2>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered">
     <thead>
@@ -90,7 +90,7 @@
       </tr>
     </tbody>
   </table>
-</div>
+</div> -->
 
 <!--  Create Modal -->
 <div class="modal fade modal-lg" id="addModal" tabindex="-1"  aria-hidden="true" style="margin-left: 30%;">
@@ -195,7 +195,7 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="district" >İlçe</label>
-                <input class="form-control" type="text" [(ngModel)] ="createModel.district" name="district" required minlength="3">
+                <input class="form-control" type="text" [(ngModel)] ="createModel.town" name="district" required minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>
@@ -358,7 +358,7 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="district" >İlçe</label>
-                <input class="form-control" type="text" [(ngModel)] ="createModel.district" name="updateDistrict"  minlength="3">
+                <input class="form-control" type="text" [(ngModel)] ="createModel.town" name="updateDistrict"  minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>

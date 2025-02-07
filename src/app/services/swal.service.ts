@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { tick } from '@angular/core/testing';
-import { Title } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 
 @Injectable({

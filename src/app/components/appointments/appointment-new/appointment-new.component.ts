@@ -13,7 +13,7 @@ import { PatientModel } from '../../../models/patient.model';
 @Component({
   selector: 'app-appointment-new',
   standalone: true,
-  imports: [CommonModule,RouterLink, FormsModule, FormValidateDirective, PatientPipe],
+  imports: [CommonModule, FormsModule, FormValidateDirective ],
   templateUrl: './appointment-new.component.html',
   styleUrl: './appointment-new.component.css'
 })

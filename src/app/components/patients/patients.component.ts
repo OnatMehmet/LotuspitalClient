@@ -25,9 +25,11 @@ export class PatientsComponent implements OnInit {
   @ViewChild("updateModalCloseBtn") updateModalCloseBtn : ElementRef<HTMLButtonElement> | undefined;
   createModel: PatientModel = new PatientModel();
   updateModel: PatientModel = new PatientModel();
-  
   search: string =""
   
+  // dtOptions: DataTables.Settings = {};
+  // dtTrigger: Subject<any> = new Subject<any>();
+
     constructor(
       private http:HttpService,
       private swal: SwalService
@@ -36,6 +38,16 @@ export class PatientsComponent implements OnInit {
   
     ngOnInit(): void {
       this.getAll();
+      // this.dtOptions = {
+      //   paging: true,
+      //   searching: true,
+      //   ordering: true,
+      //   info: true
+      // };
+  
+      // // DataTable'ı tetikleyin
+      // this.dtTrigger.next();
+
       // this.swal.callSwal("Silme İşlemi","Silinsinmi", "Sil", ()=> {
       //   alert("Silme işlemi başarılı");
       // });
