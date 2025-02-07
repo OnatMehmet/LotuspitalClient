@@ -5,23 +5,29 @@ export class PatientModel {
     lastName: string ="";
     fullName : string ="";
     identityNumber: string ="";
-    gender : string =""
-    genderValue: number = 0;
-    birthOfDate?: Date;
+    gender: GenderModel = new GenderModel();
+    genderValue : number = 0;
+    birthOfDate: number =  Date.now() ;
     age?: number;
     job:string ="";
     
     //İletişim Bilgileri
-    phoneNumber : string = "";
-    eMail: string ="";
+    phoneNumber : string ="";
+    email: string ="";
     country: string ="";
     city: string ="";
     district: string ="";
     fullAddress: string ="";
 
     //Başvuran Bilgileri
-    applicantFullName: string ="";
-    applicantPhoneNumber: string ="";
-    closenessDegre: string ="";
+    applicantFullName?: string ="";
+    applicantPhoneNumber?: string = "";
+    closenessDegree?: string ="";
+
+}
+
+export class GenderModel {
+    name:string  ="";
+    value :number = 0;
 
 }

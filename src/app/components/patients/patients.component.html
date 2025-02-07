@@ -270,7 +270,7 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="lastName" >Cinsiyet</label>
-                <select class="form-control" [(ngModel)] = "updateModel.genderValue" name="genderValue"  required="">
+                <select class="form-control" [(ngModel)] = "updateModel.genderValue" name="updateGenderValue" >
                   <option [value]=0 >Seçiniz...</option>
                   @for (gender of genders; track gender) {
                     <option [value]="gender.value" >{{gender.name}}</option>
@@ -284,14 +284,14 @@
             <div class="col-lg-6">
               <div class="form-group mt-2">
                 <label for="birthOfDate" >Doğum Tarihi</label>
-                <input class="form-control" type="date" [(ngModel)] ="updateModel.birthOfDate" name="updateBirthOfDate" required minlength="3">
+                <input class="form-control" type="date" [(ngModel)] ="updateModel.birthOfDate" name="updateBirthOfDate"  minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="job" >Meslek</label>
-                <input class="form-control" type="text" [(ngModel)] ="updateModel.job" name="updateJob" required minlength="3">
+                <input class="form-control" type="text" [(ngModel)] ="updateModel.job" name="updateJob" minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>
@@ -304,14 +304,14 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="phoneNumber" >Telefon</label>
-                <input class="form-control" type="tel" [(ngModel)] ="updateModel.phoneNumber" name="updatePhoneNumber" required minlength="10">
+                <input class="form-control" type="tel" [(ngModel)] ="updateModel.phoneNumber" name="updatePhoneNumber"  minlength="10">
                 <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="email" >Email</label>
-                <input class="form-control" type="text" [(ngModel)] ="updateModel.email" name="updateEmail" required minlength="5" >
+                <input class="form-control" type="text" [(ngModel)] ="updateModel.email" name="updateEmail"  minlength="5" >
                 <div class="invalid-feedback"></div>
               </div>
             </div>
@@ -320,14 +320,14 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="country" >Ülke</label>
-                <input class="form-control" type="text" [(ngModel)] ="createModel.country" name="updateCountry" required minlength="3">
+                <input class="form-control" type="text" [(ngModel)] ="createModel.country" name="updateCountry"  minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="city" >Şehir</label>
-                <input class="form-control" type="text" [(ngModel)] ="createModel.city" name="updateCity" required minlength="5" >
+                <input class="form-control" type="text" [(ngModel)] ="createModel.city" name="updateCity" minlength="5" >
                 <div class="invalid-feedback"></div>
               </div>
             </div>
@@ -336,14 +336,14 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="district" >İlçe</label>
-                <input class="form-control" type="text" [(ngModel)] ="createModel.district" name="updateDistrict" required minlength="3">
+                <input class="form-control" type="text" [(ngModel)] ="createModel.district" name="updateDistrict"  minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="fullAddress" >Adres</label>
-                <textarea class="form-control" type="text" [(ngModel)] ="createModel.fullAddress" name="updateFullAddress" required minlength="5" ></textarea>
+                <textarea class="form-control" type="text" [(ngModel)] ="createModel.fullAddress" name="updateFullAddress"  minlength="5" ></textarea>
                 <div class="invalid-feedback"></div>
               </div>
             </div>
@@ -397,72 +397,3 @@
 </div>
 
 
-<!--  Update  Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1"  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Hasta Güncelleme </h1>
-        <button type="button"  #updateModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
-      </div>
-      <form #updateForm="ngForm" formValidate autocomplete="off" (ngSubmit)="update(updateForm)">
-        <div class="modal-body">
-            <div class="form-group mt-2">
-              <label for="firstName">Adı </label>
-              <input class="form-control" type="text" [(ngModel)] ="updateModel.firstName" name="updateFirstName" required minlength="3">
-              <div class="invalid-feedback"></div>
-            </div>
-            <div class="form-group mt-2">
-              <label for="lastName" >Soyadı</label>
-              <input class="form-control" type="text" [(ngModel)] ="updateModel.lastName" name="updateLastName" required minlength="3">
-              <div class="invalid-feedback"></div>
-            </div>
-            <div class="form-group mt-2">
-              <label for="lastName" >Vatandaşlık Numarası</label>
-              <input class="form-control" type="text" [(ngModel)] ="updateModel.identityNumber" name="updateIdentityNumber" required minlength="11" maxlength="11">
-              <div class="invalid-feedback"></div>
-            </div>
-            <div class="form-group mt-2">
-              <label for="lastName" >Cinsiyet</label>
-              <select class="form-control"  [(ngModel)] = "updateModel.gender"  name="updateGender"required="">
-                <option [value]=0 >Seçiniz...</option>
-                <option [value]=1 >Erkek</option>
-                <option [value]=2 >Kadın</option>
-                <option [value]=3 >Belirtmek İstemiyorum</option>
-              </select>
-              <div class="invalid-feedback"></div>
-            </div>
-            <div class="form-group mt-2">
-              <label for="lastName" >Şehir</label>
-              <input class="form-control" type="text" [(ngModel)] ="updateModel.city" name="updateCity" required minlength="3">
-              <div class="invalid-feedback"></div>
-            </div>
-            <div class="form-group mt-2">
-              <label for="lastName" >İlçe</label>
-              <input class="form-control" type="text" [(ngModel)] ="updateModel.district" name="updateDistrict" required minlength="3">
-              <div class="invalid-feedback"></div>
-            </div>
-            <div class="form-group mt-2">
-              <label for="lastName" >Adres</label>
-              <textarea class="form-control" type="text" [(ngModel)] ="updateModel.fullAddress" name="updateFullAddress" required minlength="3"></textarea>
-              <div class="invalid-feedback"></div>
-            </div>
-            <!-- <div class="form-group mt-2">
-              <label for ="department">Departman</label>
-              <select class="form-control" name="department" [(ngModel)] = "createModel.departmentValue" required="">
-                <option [value]=0 >Seçiniz...</option>
-                  @for (department of departments; track department) {
-                     <option [value]="department.value" >{{department.name}}</option>
-                  }
-              </select>
-              <div class="invalid-feedback"></div>
-            </div> -->
-          </div>
-        <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button> -->
-          <button type="submit" class="btn btn-success w-100">Kaydet</button>
-        </div>
-    </form>
-    </div>
-  </div>
-</div>

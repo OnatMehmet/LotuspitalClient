@@ -1,7 +1,8 @@
 
+import { GenderModel } from "./models/patient.model"
 import { DepartmentModel } from "./models/personnel.model"
 
-export const api: string  ="https://localhost:7157/api" //canlıya lınınca değişecek
+export const api: string  ="https://localhost:7157/api" //canlıya alınınca değişecek
 
 export const departments : DepartmentModel[] =  [
     {
@@ -28,4 +29,21 @@ export const departments : DepartmentModel[] =  [
         value:6,
         name:"Psikiyatri"
     },
+]
+
+
+export const genders : GenderModel[] =  [
+    {
+        value:1,
+        name:"Erkek"
+    },
+    {
+        value:2,
+        name:"Kadın"
+    },
+    {
+        value:3,
+        name:"Belirtmek İstemiyorum"
+    }
+
 ]

@@ -31,3 +31,51 @@
             Burada Takvim Olacak
     </div>
 </div>
+<!--  Create Modal -->
+<div class="modal fade" id="addModal" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Yeni RAndevu Oluştur </h1>
+          <button type="button"  #addModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+        </div>
+        <form #addForm="ngForm" formValidate autocomplete="off" (ngSubmit)="create(addForm)">
+          <div class="modal-body">
+            <div class="form-group">
+                <span>{{createModel.startDate}} - {{createModel.endDate}}</span>
+            </div>
+            <div class="form-group mt-2">
+                <label for="identityNumber" >Kimlik No</label>
+                <input class="form-control" type="text" [(ngModel)] ="createModel.identityNumber" name="identityNumber" required minlength="3">
+                <div class="invalid-feedback"></div>
+              </div>
+            <div class="form-group mt-2">
+              <label for="firstName">Adı </label>
+              <input class="form-control" type="text" [(ngModel)] ="createModel.firstName" name="firstName" required minlength="3">
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group mt-2">
+              <label for="lastName" >Soyadı</label>
+              <input class="form-control" type="text" [(ngModel)] ="createModel.lastName" name="lastName" required minlength="3">
+              <div class="invalid-feedback"></div>
+            </div>
+            <!-- <div class="form-group mt-2">
+              <label for="phoneNumber" >Telefon</label>
+              <input class="form-control" type="tel" [(ngModel)] ="createModel.phoneNumber" name="phoneNumber" required minlength="10" maxlength="11">
+              <div class="invalid-feedback"></div>
+            </div> -->
+            <div class="form-group mt-2">
+              <label for="address" >Adres</label>
+              <textarea class="form-control" type="text" [(ngModel)] ="createModel.fullAddress" name="address" required minlength="5"></textarea>
+              <div class="invalid-feedback"></div>
+            </div>
+           
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button> -->
+            <button type="submit" class="btn btn-success w-100">Kaydet</button>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>

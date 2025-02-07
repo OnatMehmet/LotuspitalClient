@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@sweetalert2/ngx-sweetalert2": "^12.4.0",
+    "angular-calendar": "^0.31.1",
     "form-validate": "^0.0.7",
     "form-validate-angular": "^19.0.1",
     "jwt-decode": "^4.0.0",

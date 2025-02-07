@@ -29,7 +29,11 @@
           <tr>
             <th>#</th>
             <th>Ad Soyad</th>
+            <th>Kimlik No</th>
+            <th>Telefon</th>
+            <th>Görevi</th>
             <th>Departman</th>
+            <th>Adres</th>
             <th>İşlemler</th>
           </tr>
         </thead>
@@ -38,7 +42,11 @@
           <tr>
             <td>{{$index+1}}</td>
             <td>{{personnel.fullName}}</td>
+            <td>{{personnel.identityNumber}}</td>
+            <td>{{personnel.phoneNumber}}</td>
+            <td>{{personnel.work}}</td>
             <td>{{personnel.department.name}}</td>
+            <td>{{personnel.address}}</td>
             <td>
               <button (click)="get(personnel)" data-bs-toggle="modal"  data-bs-target="#updateModal" class="btn btn-sm btn-outline-primary me-2">
                 <i class="fa-solid fa-edit"></i>
@@ -75,6 +83,21 @@
             <div class="invalid-feedback"></div>
           </div>
           <div class="form-group mt-2">
+            <label for="identityNumber" >Kimlik No</label>
+            <input class="form-control" type="text" [(ngModel)] ="createModel.identityNumber" name="identityNumber" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="phoneNumber" >Telefon</label>
+            <input class="form-control" type="tel" [(ngModel)] ="createModel.phoneNumber" name="phoneNumber" required minlength="10" maxlength="11">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="work" >Görevi</label>
+            <input class="form-control" type="text" [(ngModel)] ="createModel.work" name="work" required minlength="4">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
             <label for ="department">Departman</label>
             <select class="form-control" name="department" [(ngModel)] = "createModel.departmentValue" required="">
               <option [value]=0 >Seçiniz...</option>
@@ -84,6 +107,12 @@
             </select>
             <div class="invalid-feedback"></div>
           </div>
+          <div class="form-group mt-2">
+            <label for="address" >Adres</label>
+            <textarea class="form-control" type="text" [(ngModel)] ="createModel.address" name="address" required minlength="5"></textarea>
+            <div class="invalid-feedback"></div>
+          </div>
+         
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button> -->
@@ -99,31 +128,52 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">Personel Güncelleme </h1>
-        <button type="button"  #updateModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+        <h1 class="modal-title fs-5">Personel Düzenleme </h1>
+        <button type="button"  #addModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
       </div>
       <form #updateForm="ngForm" formValidate autocomplete="off" (ngSubmit)="update(updateForm)">
         <div class="modal-body">
           <div class="form-group mt-2">
             <label for="firstName">Adı </label>
-            <input class="form-control" type="text" [(ngModel)] ="updateModel.firstName" name="firstName" required minlength="3">
+            <input class="form-control" type="text" [(ngModel)] ="updateModel.firstName" name="updateFirstName" required minlength="3">
             <div class="invalid-feedback"></div>
           </div>
           <div class="form-group mt-2">
             <label for="lastName" >Soyadı</label>
-            <input class="form-control" type="text" [(ngModel)] ="updateModel.lastName" name="lastName" required minlength="3">
+            <input class="form-control" type="text" [(ngModel)] ="updateModel.lastName" name="updateLastName" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="identityNumber" >Kimlik No</label>
+            <input class="form-control" type="text" [(ngModel)] ="updateModel.identityNumber" name="updateIdentityNumber" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="phoneNumber" >Telefon</label>
+            <input class="form-control" type="tel" [(ngModel)] ="updateModel.phoneNumber" name="updatePhoneNumber" required minlength="10" maxlength="11">
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="work" >Görevi</label>
+            <input class="form-control" type="text" [(ngModel)] ="updateModel.work" name="updateWork" required minlength="4">
             <div class="invalid-feedback"></div>
           </div>
           <div class="form-group mt-2">
             <label for ="department">Departman</label>
             <select class="form-control" name="department" [(ngModel)] = "updateModel.departmentValue" required="">
-              <option value="">Seçiniz...</option>
+              <option [value]=0 >Seçiniz...</option>
                 @for (department of departments; track department) {
                    <option [value]="department.value" >{{department.name}}</option>
                 }
             </select>
             <div class="invalid-feedback"></div>
           </div>
+          <div class="form-group mt-2">
+            <label for="address" >Adres</label>
+            <textarea class="form-control" type="text" [(ngModel)] ="updateModel.address" name="updateAddress" required minlength="5"></textarea>
+            <div class="invalid-feedback"></div>
+          </div>
+         
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button> -->
@@ -133,3 +183,4 @@
     </div>
   </div>
 </div>
+

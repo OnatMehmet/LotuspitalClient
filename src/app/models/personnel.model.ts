@@ -3,8 +3,13 @@ export class PersonnelModel{
     firstName: string ="";
     lastName: string ="";
     fullName: string ="";
+    identityNumber : string ="";
+    phoneNumber : string ="";
+    work :string ="";
+    address :string ="";
     department: DepartmentModel = new DepartmentModel();
     departmentValue : number = 0;
+
 }
 
 export class DepartmentModel {
