@@ -1,97 +1,16 @@
-
-  <div class="row text-center">
-    <div class="col-md-4">
-      <div class="btn-group">
-
-      </div>
-    </div>
-    <div class="col-md-4">
-      <h3>{{ dateWithoutTime }}</h3>
-    </div>
-    <div class="col-md-4">
-      <div class="btn-group">
-        <div
-          class="btn btn-primary"
-          (click)="view = CalendarView.Day"
-          [class.active]="view === CalendarView.Day">
-          Günlük
-        </div>
-        <div
-          class="btn btn-primary"
-          (click)="view = CalendarView.Week"
-          [class.active]="view === CalendarView.Week">
-          Haftalık
-        </div>
-        <div
-          class="btn btn-primary"
-          (click)="view = CalendarView.Month"
-          [class.active]="view === CalendarView.Month">
-          Aylık
-        </div>
-      </div>
-    </div>
-  </div>
-  <br />
-
-  
-
-  
-
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Test</h5>
-      </div>
-      <div class="modal-body">
-        <div class="profile-personal-info">
-          <div class="row mb-2">
-              <div class=" col-5">
-                  <h6 class="f-w-500">Firma <span class="pull-right">:</span>
-                  </h6>
-              </div>
-              <div class="col-7"><span>Lotuspital</span>
-              </div>
-          </div>
-          <div class="row mb-2" >
-            <div class=" col-5">
-                <h6 class="f-w-500">Katılımcı <span class="pull-right">:</span></h6>
-            </div>
-            <div class="col-7"><span>Mehmet</span>
-            </div>
-        </div>
-          <div class="row mb-2">
-              <div class=" col-5">
-                  <h6 class="f-w-500">Grup <span class="pull-right">:</span>
-                  </h6>
-              </div>
-              <div class="col-7"><span>A Grubu</span>
-              </div>
-          </div>
-          <div class="row mb-2">
-              <div class=" col-5">
-                  <h6 class="f-w-500">Eğitmen <span class="pull-right">:</span></h6>
-              </div>
-              <div class="col-7"><span>Mehmet Onat</span>
-              </div>
-          </div>
-          <div class="row mb-2">
-              <div class="col-5">
-                  <h6 class="f-w-500">Başlama Tarihi <span class="pull-right">:</span>
-                  </h6>
-              </div>
-              <div class="col-7"><span>01.01.2025</span>
-              </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-5">
-                <h6 class="f-w-500">Bitiş Tarihi <span class="pull-right">:</span>
-                </h6>
-            </div>
-            <div class="col-7"><span>05.05.2025</span>
-            </div>
-        </div>
-      </div>
-      </div>
-      <div class="center tablo-button">
-        <button type="button" class="btn tablo-edit-button" (click)="deleteModel(1)">Sil</button>
-      </div>
-    </div>
+<div class="mt-4 d-flex justify-content-between align-items-center">
+  <h3>Hasta Sayfası</h3>
+  <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Takvim</li>
+      </ol>
+    </nav>
+</div>
+<div class="calendar-container">
+  <mwl-calendar-month-view
+    [viewDate]="viewDate"
+    (dayClicked)="dayClicked($event)"
+    [events]="events">
+  </mwl-calendar-month-view>
+</div>

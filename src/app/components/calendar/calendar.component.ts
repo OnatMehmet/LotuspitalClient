@@ -1,131 +1,53 @@
-import { Subject } from 'rxjs';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CalendarDateFormatter, CalendarEvent, CalendarEventTimesChangedEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { HomeComponent } from '../home/home.component';
-import { AppointmentsComponent } from '../appointments/appointments.component';
-import { AppointmentModel } from '../../models/appointment.model';
+import { Component, OnInit } from '@angular/core';
+import { CalendarEvent, CalendarMonthViewDay, CalendarUtils } from 'angular-calendar';
+import { addDays } from 'date-fns';
+import { CommonModule } from '@angular/common'; // CommonModule ekleyin
+import { CalendarModule } from 'angular-calendar'; // CalendarModule'u dahil edin
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
-  standalone: true,
-  imports: [],
+  standalone: true, // Standalone bileşen olarak işaret ediyoruz
+  imports: [CommonModule, CalendarModule, RouterLink], // Gerekli modülleri burada import ediyoruz
+  providers: [CalendarUtils], // CalendarUtils'i burada provider olarak sağlıyoruz
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css',
-  providers: [
-    {
-      provide: CalendarDateFormatter,
-      // useClass: MyCalendarDateFormatter,
-    },
-  ],
-  
+  styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent extends AppointmentsComponent implements OnInit {
-
-  @Input('showActions')
-  showActions : boolean = false;
-  editID: number = 0;
-
-  isInstructor: boolean = false;
-  isAdmin: boolean = false;
-  isStudent: boolean = false;
-
-  isVisibleAddModal: boolean = false;
-  isVisibleEditModal: boolean = false;
-
-  // calendar configuration
-  view: CalendarView = CalendarView.Week;
-  CalendarView = CalendarView;
+export class CalendarComponent implements OnInit {
   viewDate: Date = new Date();
-  locale: string = 'tr';
-  refresh: Subject<any> = new Subject();
-  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  weekendDays: number[] = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
-  arrayColors : {companyID:number,color:string}[] = [];
-  arrayColorCodes : {companyID:number,color:string}[] = [];
-  dateWithoutTime = this.viewDate.toLocaleDateString();
-  // end of calendar configuration
+  events: CalendarEvent[] = [];
 
-  // filter properties
-  @Input('showFilters')
-  showFilters: boolean = true;
-  @Input('showInstructorFilter')
-  showInstructorFilter: boolean = true;
-  @Input('showCompanyFilter')
-  showCompanyFilter: boolean = true;
-  @Input('showTrainingFilter')
-  showTrainingFilter: boolean = true;
-  @Input('showActivityTypeFilter')
-  showActivityTypeFilter: boolean = true;
-  @Input('instructorID')
-  instructorID: string = "";
-  @Input('companyID')
-  companyID: string = "";
-  @Input('trainingID')
-  trainingID: string = "";
-  @Input('activityType')
-  activityType: number = 1;
-  @Input('showGeneralFilter')
-  showGeneralFilter: boolean = false;
-  // end of filter properties
-  
-  events: CalendarEvent[] = []
+  constructor() {}
 
-  modalVirtualData: AppointmentModel[] = [];
+  ngOnInit(): void {
+    this.generateSampleEvents();
+  }
 
-
-  ngOnInit() {
-
-    
-    if(!this.showGeneralFilter){
-      if(this.isInstructor){
-        this.showInstructorFilter = false;
+  // Örnek etkinlikler ekleme
+  generateSampleEvents() {
+    this.events = [
+      {
+        start: new Date(),
+        title: 'Randevu 1'
+      },
+      {
+        start: addDays(new Date(), 2),
+        title: 'Randevu 2'
+      },
+      {
+        start: addDays(new Date(), 4),
+        title: 'Randevu 3'
       }
+    ];
+  }
+
+  // Gün tıklama olayını işleme
+  dayClicked({ day }: { day: CalendarMonthViewDay }): void {
+    console.log(day); // Günü konsola yazdır
+    if (day.events && day.events.length > 0) {
+      alert(`Gün: ${day.date}, Etkinlik: ${day.events[0].title}`);
+    } else {
+      alert('Bu günde etkinlik yok!');
     }
-
-    
-  }
-
-  showCreateModal(){
-    this.isVisibleAddModal = true;
-  }
-    
-
-
-
-  isVisibleVirtualModal:boolean=false;
-  isVisibleActivityModal:boolean=false;
-
-
-  /////month
-  activeDayIsOpen: boolean = true;
-  modalData!: {
-    action: string;
-    event: CalendarEvent;
-  };
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map((iEvent) => {
-      
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd,
-        };
-      }
-      return iEvent;
-    });
-    // this.infoModal(event);
-  }
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-    
-  }
-
-
-    deleteModel(id = 1) {
-
   }
 }

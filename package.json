@@ -23,6 +23,7 @@
     "angular-datatables": "^19.0.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "date-fns": "^4.1.0",
     "form-validate": "^0.0.7",
     "form-validate-angular": "^19.0.1",
     "jwt-decode": "^4.0.0",
