@@ -10,6 +10,7 @@ import { PersonnelModel } from '../../models/personnel.model';
 import { PersonnelPipe } from '../pipe/personnel.pipe';
 
 
+
 @Component({
   selector: 'app-personnels',
   standalone: true,

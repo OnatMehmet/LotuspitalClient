@@ -1,38 +1,144 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/">Özel Lotuspital Evde Bakım Merkezi</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" routerLink="/personnels" aria-current="page" >Personel</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" routerLink="/patients" aria-current="page" >Hasta</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" routerLink="/appointments" aria-current="page" >Randevu</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" routerLink="/calendar" aria-current="page" >Takvim</a>
-          </li>
-        </ul>
-        <!-- <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Ara" aria-label="Ara">
-          <button class="btn btn-outline-success" type="submit">Ara</button>
-        </form> -->
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+  <div class="container-fluid">
+    <!-- Logo and Navbar Brand -->
+    <!-- <a class="navbar-brand" routerLink="/">Özel Lotuspital Evde Bakım Merkezi</a> -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 position-relative">
+      <input type="search" class="form-control" placeholder=" &nbsp;&nbsp;Ara">
+      <i class="fa-solid fa-magnifying-glass search"></i>
+    </div>
+      <!-- User info and Sign-out Button -->
+      <div class="d-flex align-items-center">
         <span class="me-4">Mehmet Onat</span>
-        <button (click)=" signOut()" class="btn btn-outline-danger">
-            <i class="fa-solid fa-power-off"></i>
+        <button (click)="signOut()" class="btn btn-outline-danger">
+          <i class="fa-solid fa-power-off"></i>
         </button>
       </div>
     </div>
-  </nav>
+</nav>
+<div class="sidebar">
+    <!-- Sidebar Collapse Button (Mobile view) -->
+    <button class="btn btn-light d-md-none w-100" type="button" (click)="toggleSidebar()">
+      <span class="navbar-toggler-icon"></span> Menü
+    </button>
+      <!-- Logo Area -->
+       
+      <div class="sidebar-header">
+        <img src="./src/app/components/layouts/navbar/images" alt="Logo" class="logo">
+      </div>
+      <div class="row">
+        <ul class="nav flex-column mt-3">
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/" routerLinkActive="active">
+              <i class="fa fa-home fa-fw" aria-hidden="true"></i>&nbsp;Anasayfa
+            </a>
+          </li>
 
- <!-- <div class="nav flex-column" aria-orientation="vertical"> 
-    <a class="nav-link active" data-bs-toggle="hasta">Hasta</a>
-    <a class="nav-link active" data-bs-toggle="hasta">Doktor</a>
-    <a class="nav-link active" data-bs-toggle="hasta">Randevu</a>
- </div> -->
+          <!-- Hasta Accordion -->
+          <li class="nav-item">
+
+            <a class="nav-link text-white"  (click)="toggleAccordion(0)">
+              <i class="fa-solid fa-user"></i>&nbsp;Hasta
+              <i class="fa-solid arrow-icon" [ngClass]="{'fa-chevron-right': activeIndex !== 0, 'fa-chevron-down': activeIndex === 0}"></i>
+            </a>
+            <ul class="accordion-collapse collapse" [ngClass]="{'show': activeIndex === 0}">
+              <a class="dropdown-item custom-dropdown-item" routerLink="/patients/new">
+                <i class="fa-solid fa-user-plus"></i>&nbsp;Yeni Hasta</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/patients">
+                <i class="fa-solid fa-list"></i>&nbsp;Hasta Listesi</a>
+            </ul>
+          </li>
+
+          <!-- Randevu Accordion -->
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="toggleAccordion(1)">
+              <i class="fas fa-calendar-check"></i>&nbsp;Randevu
+              <i class="fa-solid arrow-icon" [ngClass]="{'fa-chevron-right': activeIndex !== 1, 'fa-chevron-down': activeIndex === 1}"></i>
+            </a>
+            <ul class="accordion-collapse collapse" [ngClass]="{'show': activeIndex === 1}">
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments/appointment-new">
+                <i class="fa-solid fa-calendar-plus"></i>&nbsp;Yeni Randevu</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments">
+                <i class="fa-solid fa-calendar-days"></i>&nbsp;Randevu Listesi</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/calendar">
+                <i class="fa-solid fa-calendar-alt"></i>&nbsp;Takvim</a>
+            </ul>
+          </li>
+
+          <!-- Satış Accordion -->
+          <li class="nav-item">
+            <a class="nav-link text-white"  (click)="toggleAccordion(2)">
+              <i class="fas fa-dollar-sign"></i>&nbsp;Satış
+              <i class="fa-solid arrow-icon" [ngClass]="{'fa-chevron-right': activeIndex !== 2, 'fa-chevron-down': activeIndex === 2}"></i>
+            </a>
+            <ul class="accordion-collapse collapse" [ngClass]="{'show': activeIndex === 2}">
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments/new">
+                <i class="fa-solid fa-tag"></i>&nbsp;Yeni Satış</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments">
+                <i class="fa-solid fa-list"></i>&nbsp;Satış Listesi</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/calendar">
+                <i class="fa-solid fa-cash-register"></i>&nbsp;Kasa</a>
+            </ul>
+          </li>
+
+          <!-- Raporlar Menü -->
+          <li class="nav-item">
+            <a class="nav-link text-white"  (click)="toggleAccordion(3)">
+              <i class="fas fa-chart-bar"></i>&nbsp;Raporlar
+              <i class="fa-solid arrow-icon" [ngClass]="{'fa-chevron-right': activeIndex !== 3, 'fa-chevron-down': activeIndex === 3}"></i>
+            </a>
+            <ul class="accordion-collapse collapse" [ngClass]="{'show': activeIndex === 3}">
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments/new">
+                <i class="fa-solid fa-users-cog"></i>&nbsp;Satış Raporu</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments">
+                <i class="fa-solid fa-users"></i>&nbsp;Tahsilat Raporu</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments">
+                <i class="fa-solid fa-briefcase"></i>&nbsp;Stok Raporu</a>
+            </ul>
+          </li>
+
+          <!-- Sistem Menü -->
+          <li class="nav-item">
+            <a class="nav-link text-white"   (click)="toggleAccordion(4)">
+              <i class="fa-solid fa-bars"></i>&nbsp;Sistem
+              <i class="fa-solid arrow-icon" [ngClass]="{'fa-chevron-right': activeIndex !== 4, 'fa-chevron-down': activeIndex === 4}"></i>
+            </a>
+            <ul class="accordion-collapse collapse" [ngClass]="{'show': activeIndex === 4}">
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments/new">
+                <i class="fa-solid fa-cogs"></i>&nbsp;Ayarlar</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/personnels">
+                <i class="fa-solid fa-users"></i>&nbsp;Personel</a>
+            </ul>
+          </li>
+
+          <!-- Tanımlamalar Accordion -->
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="toggleAccordion(5)">
+              <i class="fas fa-cogs"></i>&nbsp;Tanımlamalar
+              <i class="fa-solid arrow-icon" [ngClass]="{'fa-chevron-right': activeIndex !== 5, 'fa-chevron-down': activeIndex === 5}"></i>
+            </a>
+            <ul class="accordion-collapse collapse" [ngClass]="{'show': activeIndex === 5}">
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments/new">
+                <i class="fa-solid fa-users-cog"></i>&nbsp;Kullanıcı</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/personnels">
+                <i class="fa-solid fa-users"></i>&nbsp;Personel</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments">
+                <i class="fa-solid fa-briefcase"></i>&nbsp;Hizmet</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments">
+                <i class="fa-solid fa-cogs"></i>&nbsp;Ürün</a>
+              <a class="dropdown-item custom-dropdown-item" routerLink="/appointments">
+                <i class="fa-solid fa-file-alt"></i>&nbsp;Form</a>
+            </ul>
+          </li>
+
+          <!-- E-Nabız Menü -->
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/logout" routerLinkActive="active">
+              <i class="fa-solid fa-heart-pulse"></i>&nbsp;E-Nabız
+            </a>
+          </li>
+        </ul>
+      </div>
+
+
+</div>
+

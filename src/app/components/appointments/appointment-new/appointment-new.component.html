@@ -1,0 +1,168 @@
+<div class="card">
+    <div class="card-body">
+      <h6 class="card-title">Yeni Randevu</h6>
+      <hr class="divider">
+  
+      <!-- Navigation with Tabs -->
+      <nav class="nav nav-pills nav-justified">
+        <a class="nav-link"   (click)="showSearch = true" [class.active]="showSearch">Hasta Ara</a>
+        <a class="nav-link" (click)="showSearch = false" [class.active]="!showSearch">Yeni Hasta</a>
+      </nav>
+  
+      <hr class="divider">
+  
+      <!-- Form Content for "Hasta Ara" -->
+      <div *ngIf="showSearch" class="row">
+        <div class="col-md-10">
+          <div class="form-group">
+            <input 
+              class="form-control" 
+              type="text" 
+              placeholder="Ara" 
+              name="ara" 
+              [(ngModel)]="searchTerm" 
+              (input)="filterPatients()" 
+              required minlength="3" 
+            />
+            <div class="invalid-feedback"></div>
+  
+            <!-- Search Icon -->
+            <i class="fa fa-search search" aria-hidden="true"></i>
+          </div>
+  
+          <!-- Suggestions List, visible only if there are matching patients -->
+          <div *ngIf="filteredPatients.length > 0" class="suggestions-list">
+            <ul class="list-group">
+              <li 
+                *ngFor="let patient of filteredPatients" 
+                class="list-group-item" 
+                (click)="selectPatient(patient)">
+                {{ patient.name }}
+              </li>
+            </ul>
+          </div>
+  
+          <!-- Optional: If no patients are found, show a message -->
+          <div *ngIf="searchTerm && filteredPatients.length === 0">
+            <p>No patients found with this name.</p>
+          </div>
+        </div>
+      </div>
+  
+      
+        
+      <!-- Form Content for "Yeni Hasta" -->
+      <form #addPatientForm="ngForm" formValidate autocomplete="off" (ngSubmit)="addPatient(addPatientForm)">
+        <div *ngIf="!showSearch" class="row">
+            <div class="card">
+                <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="firstName">Ad</label>
+                        <input class="form-control" type="text" [(ngModel)]="createPatientModel.firstName" name="firstName" required minlength="3">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="lastName">Soyad</label>
+                        <input class="form-control" type="text" [(ngModel)]="createPatientModel.lastName" name="lastName" required minlength="3">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    <label for="identityNumber">Vatandaşlık Numarası</label>
+                    <input class="form-control" type="text" [(ngModel)]="createPatientModel.identityNumber" name="identityNumber" required minlength="11" maxlength="11">
+                    <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="genderValue">Cinsiyet</label>
+                    <select class="form-control" [(ngModel)]="createPatientModel.genderValue" name="genderValue" required>
+                    <option [value]="0">Seçiniz...</option>
+                    <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.name }}</option>
+                    </select>
+                    <div class="invalid-feedback"></div>
+                </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="birthOfDate">Doğum Tarihi</label>
+                    <input class="form-control" type="date" [(ngModel)]="createPatientModel.birthOfDate" name="birthOfDate" required>
+                    <div class="invalid-feedback"></div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="job">Meslek</label>
+                    <input class="form-control" type="text" [(ngModel)]="createPatientModel.job" name="job" required minlength="3">
+                    <div class="invalid-feedback"></div>
+                </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                <div class="form-group mt-2">
+                    <label for="phoneNumber" >Telefon</label>
+                    <input class="form-control" type="tel" [(ngModel)] ="createPatientModel.phoneNumber" name="phoneNumber" required minlength="10">
+                    <div class="invalid-feedback"></div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group mt-2">
+                    <label for="email" >Email</label>
+                    <input class="form-control" type="text" [(ngModel)] ="createPatientModel.email" name="email" required minlength="5" >
+                    <div class="invalid-feedback"></div>
+                </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    <label for="genderValue">Şehir</label>
+                    <select class="form-control" [(ngModel)]="createPatientModel.city" name="city" >
+                        <!-- <option [value]="0">Seçiniz...</option> -->
+                        <option [value]="1">Ankara</option>
+                        <option [value]="2">İstanbul</option>
+                        <!-- <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.name }}</option> -->
+                    </select>
+                    <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="genderValue">İlçe</label>
+                    <select class="form-control" [(ngModel)]="createPatientModel.town" name="town" >
+                    <!-- <option [value]="0">Seçiniz</option> -->
+                    <option [value]="1">Çankaya</option>
+                    <option [value]="2">Keçiören</option>
+                    <!-- <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.name }}</option> -->
+                    </select>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+            
+            </div>
+                 <!-- Kaydet Butonu -->
+    <div class="text-center">
+        <button type="submit" class="btn btn-success right">Kaydet</button>
+        </div>
+        </div>
+      </div>
+    </div>
+    </form>
+
+    </div>
+</div>
+  

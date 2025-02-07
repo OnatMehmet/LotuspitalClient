@@ -42,6 +42,7 @@ export class CalendarComponent extends AppointmentsComponent implements OnInit {
   weekendDays: number[] = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
   arrayColors : {companyID:number,color:string}[] = [];
   arrayColorCodes : {companyID:number,color:string}[] = [];
+  dateWithoutTime = this.viewDate.toLocaleDateString();
   // end of calendar configuration
 
   // filter properties
@@ -74,7 +75,7 @@ export class CalendarComponent extends AppointmentsComponent implements OnInit {
 
   ngOnInit() {
 
-
+    
     if(!this.showGeneralFilter){
       if(this.isInstructor){
         this.showInstructorFilter = false;

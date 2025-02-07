@@ -16,7 +16,7 @@ export class PatientModel {
     email: string ="";
     country: string ="";
     city: string ="";
-    district: string ="";
+    town: string ="";
     fullAddress: string ="";
 
     //Başvuran Bilgileri

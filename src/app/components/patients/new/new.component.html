@@ -1,0 +1,119 @@
+<form #addForm="ngForm" formValidate autocomplete="off" (ngSubmit)="add(addForm)">
+  <!-- Hasta Bilgileri -->
+  <div class="card">
+    <div class="card-body">
+      <h6 class="card-title">Hasta Bilgileri</h6>
+      <hr class="divider">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="firstName">Ad</label>
+            <input class="form-control" type="text" [(ngModel)]="createModel.firstName" name="firstName" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="lastName">Soyad</label>
+            <input class="form-control" type="text" [(ngModel)]="createModel.lastName" name="lastName" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="identityNumber">Vatandaşlık Numarası</label>
+            <input class="form-control" type="text" [(ngModel)]="createModel.identityNumber" name="identityNumber" required minlength="11" maxlength="11">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="genderValue">Cinsiyet</label>
+            <select class="form-control" [(ngModel)]="createModel.genderValue" name="genderValue" required>
+              <option [value]="0">Seçiniz...</option>
+              <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.name }}</option>
+            </select>
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="birthOfDate">Doğum Tarihi</label>
+            <input class="form-control" type="date" [(ngModel)]="createModel.birthOfDate" name="birthOfDate" required>
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="job">Meslek</label>
+            <input class="form-control" type="text" [(ngModel)]="createModel.job" name="job" required minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hasta İletişim Bilgileri -->
+  <div class="card">
+    <div class="card-body">
+      <h6 class="card-title">Hasta İletişim Bilgileri</h6>
+      <hr class="divider">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="phoneNumber">Telefon</label>
+            <input class="form-control" type="tel" [(ngModel)]="createModel.phoneNumber" name="phoneNumber" required minlength="10">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input class="form-control" type="email" [(ngModel)]="createModel.email" name="email" required minlength="5">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hasta Yakını Bilgileri -->
+      <h6 class="card-title">Hasta Yakını Bilgileri</h6>
+      <hr class="divider">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="applicantFullName">Başvuran Ad Soyad</label>
+            <input class="form-control" type="text" [(ngModel)]="createModel.applicantFullName" name="applicantFullName" minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="applicantPhoneNumber">Başvuran Telefon</label>
+            <input class="form-control" type="tel" [(ngModel)]="createModel.applicantPhoneNumber" name="applicantPhoneNumber" minlength="10" maxlength="11">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="closenessDegree">Hasta Yakınlık Derecesi</label>
+            <input class="form-control" type="text" [(ngModel)]="createModel.closenessDegree" name="closenessDegree" minlength="3">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+      </div>
+
+
+  <!-- Kaydet Butonu -->
+  <div class="text-center">
+    <button type="submit" class="btn btn-success">Kaydet</button>
+  </div>
+</form>

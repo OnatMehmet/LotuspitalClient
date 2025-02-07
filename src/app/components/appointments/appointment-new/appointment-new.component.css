@@ -1,0 +1,183 @@
+/* Hover Effect for Nav Links */
+.nav-link {
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+  
+  .nav-link:hover {
+    background-color: #f8f9fa; /* Light background on hover */
+    color: #007bff; /* Change text color */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  .nav-link.active {
+    background-color: #007bff; /* Active state background color */
+    color: white; /* Active state text color */
+  }
+  
+  /* Hover Effect for Form Input */
+  .form-control {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .form-control:hover {
+    border-color: #007bff; /* Change border color on hover */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add subtle box-shadow */
+  }
+  
+  .search {
+    position: absolute;
+    left: 80%;
+    top: 80%;
+    transform: translateY(-50%);
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .search:hover {
+    color: #0056b3; /* Change search icon color on hover */
+  }
+  /* Suggestions List */
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  .suggestions-list .list-group-item {
+    cursor: pointer;
+    padding: 10px;
+  }
+  .suggestions-list .list-group-item:hover {
+    background-color: #f1f1f1;
+  }
+  /* Optional: Style when there are no suggestions */
+.no-suggestions {
+    color: red;
+    padding: 10px;
+    font-style: italic;
+  }
+  .suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .suggestion-item:hover {
+    background-color: #222121;
+  }
+  
+  /* Optional: If you want to style the invalid feedback message */
+  .invalid-feedback {
+    display: block;
+    color: red;
+  }
+  
+  /* Genel Kart Düzeni */
+.card {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 100px;
+  }
+  
+  /* Card başlığı */
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 10px;
+  }
+  
+  /* Divider çizgi */
+  hr.divider {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Form grubu düzeni */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  /* Label düzeni */
+  label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.875rem;
+  }
+  
+  /* Giriş alanı düzeni */
+  input.form-control, textarea.form-control, select.form-control {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 0.875rem;
+    color: #495057;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+  }
+  
+  input.form-control:focus, textarea.form-control:focus, select.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  }
+
+  /* Telefon ve email alanları */
+  input[type="tel"], input[type="email"], input[type="date"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  /* Row içerisindeki inputlar arasında boşluk */
+  .row .col-md-6, .row .col-lg-6 {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  
+  /* Formun altındaki buton */
+  button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    /* font-weight: bold; */
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    transition: background-color 0.3s;
+    width: 10%;
+
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #218838;
+  }
+  
+  /* Responsive düzenleme */
+  @media (max-width: 767px) {
+    .row .col-md-6 {
+      margin-bottom: 15px;
+    }
+  
+    button[type="submit"] {
+      width: 100%;
+    }
+  }
+
+  .right {
+    position: absolute;
+    right: 40px;
+    width: 400px;
+    padding: 50px;
+    margin-top: 50px;
+  }
+  
+  
+  

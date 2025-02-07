@@ -84,12 +84,12 @@
           </div>
           <div class="form-group mt-2">
             <label for="identityNumber" >Kimlik No</label>
-            <input class="form-control" type="text" [(ngModel)] ="createModel.identityNumber" name="identityNumber" required minlength="3">
+            <input class="form-control" type="text" [(ngModel)] ="createModel.identityNumber" name="identityNumber" required minlength="11" maxlength="11">
             <div class="invalid-feedback"></div>
           </div>
           <div class="form-group mt-2">
-            <label for="phoneNumber" >Telefon</label>
-            <input class="form-control" type="tel" [(ngModel)] ="createModel.phoneNumber" name="phoneNumber" required minlength="10" maxlength="11">
+            <label for="phoneNumber" >Telefon<span></span></label>
+            <input class="form-control" type="tel" mask="(000) 000-0000" [(ngModel)] ="createModel.phoneNumber" name="phoneNumber" required minlength="10" maxlength="11">
             <div class="invalid-feedback"></div>
           </div>
           <div class="form-group mt-2">
@@ -129,7 +129,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5">Personel Düzenleme </h1>
-        <button type="button"  #addModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+        <button type="button"  #updateModalCloseBtn class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
       </div>
       <form #updateForm="ngForm" formValidate autocomplete="off" (ngSubmit)="update(updateForm)">
         <div class="modal-body">

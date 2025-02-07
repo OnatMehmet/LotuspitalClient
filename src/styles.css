@@ -17,3 +17,45 @@ a{
 input[type="search"]{
     padding-left: 35px;
 }
+/* Ana body için daha açık bir arka plan rengi */
+body {
+    background-color: #f8f9fa; /* Açık gri arka plan */
+    color: #212529; /* Koyu metin rengi */
+  }
+  
+  /* Sidebar için açık renk */
+  .sidebar {
+    background-color: #ffffff; /* Beyaz arka plan */
+    border-right: 1px solid #e1e1e1; /* Hafif gri kenar çizgisi */
+  }
+  
+  /* Navbar ve menü için renk değişiklikleri */
+  .card-header {
+    background-color: #f0f0f0; /* Açık gri arka plan */
+    border-bottom: 1px solid #ddd; /* Hafif çizgi */
+  }
+  
+  .card-body {
+    background-color: #ffffff; /* Beyaz arka plan */
+  }
+  
+  .card {
+    border: 1px solid #ddd; /* Kart kenarları için hafif gri */
+  }
+  
+  /* Butonlar için açık renkler */
+  .btn-link {
+    color: #007bff; /* Açık mavi */
+  }
+  
+  .nav-link {
+    color: #495057; /* Koyu gri yazı rengi */
+  }
+  
+  /* Footer için arka plan ve yazı rengi */
+  footer {
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 15px 0;
+  }
+  

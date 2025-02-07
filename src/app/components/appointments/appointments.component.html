@@ -1,1 +1,327 @@
-<p>appointments works!</p>
+<div class="container-fluid">
+<form>
+    <div class="iq-card ">
+      <div class="iq-card-header d-flex justify-content-between">
+        <div class="iq-header-title ">
+          <h4 class="card-title">Yeni Randevu</h4>
+        </div>
+  
+      </div>
+      <div class="card-body iq-card-body ">
+        <div>
+          <ul  class="nav nav-tabs ">
+            <li class="nav-item">
+              <a id="search-customer-tab" data-toggle="tab" href="#SearchCustomer" role="tab" aria-controls="SearchCustomer" aria-selected="true" class="nav-link show active">
+                <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-magnifying-glass fa-lg">
+                  <path fill="currentColor" d="M507.3 484.7l-141.5-141.5C397 306.8 415.1 259.7 415.1 208c0-114.9-93.13-208-208-208S-.0002 93.13-.0002 208S93.12 416 207.1 416c51.68 0 98.85-18.96 135.2-50.15l141.5 141.5C487.8 510.4 491.9 512 496 512s8.188-1.562 11.31-4.688C513.6 501.1 513.6 490.9 507.3 484.7zM208 384C110.1 384 32 305 32 208S110.1 32 208 32S384 110.1 384 208S305 384 208 384z" class=""></path>
+                </svg> Hasta Ara </a>
+            </li>
+            <li class="nav-item">
+              <a id="new-customer-tab" data-toggle="tab" href="/patients/new" role="tab" aria-controls="NewPatient" class="nav-link ">
+                <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="user-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-plus fa-lg">
+                  <path fill="currentColor" d="M274.7 304H173.3C77.61 304 0 381.6 0 477.3C0 496.5 15.52 512 34.66 512h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304zM413.3 480H34.66C33.2 480 32 478.8 32 477.3C32 399.4 95.4 336 173.3 336H274.7C352.6 336 416 399.4 416 477.3C416 478.8 414.8 480 413.3 480zM224 256c70.7 0 128-57.31 128-128S294.7 0 224 0C153.3 0 96 57.31 96 128S153.3 256 224 256zM224 32c52.94 0 96 43.06 96 96c0 52.93-43.06 96-96 96S128 180.9 128 128C128 75.06 171.1 32 224 32zM624 208h-64v-64C560 135.2 552.8 128 544 128s-16 7.156-16 16v64h-64C455.2 208 448 215.2 448 224s7.156 16 16 16h64v64c0 8.844 7.156 16 16 16s16-7.156 16-16v-64h64C632.8 240 640 232.8 640 224S632.8 208 624 208z" class=""></path>
+                </svg> Yeni Hasta </a>
+            </li>
+          </ul>
+          <div id="myTabContent" class="tab-content">
+            <div id="SearchCustomer" role="tabpanel" aria-labelledby="search-customer-tab" class="tab-pane fade show active">
+              <div class="row d-flex justify-content-center mt-4">
+                <div class="align-self-center col-md-7">
+                  <div class="iq-search-bar">
+                    <div class="searchbox" style="width: 100%;">
+                      <input type="text" placeholder="Ara" autocomplete="off" id="CustomerSelectionComponent" class="form-control">
+    
+                      <ul class="dropdown-menu" style="width: 100%;"></ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="align-self-center col-md-1">
+                </div>
+              </div>
+            </div>
+            <div id="NewPatient" role="tabpanel" aria-labelledby="new-customer-tab" class="tab-pane fade ">
+              <div class="container-fluid">
+                <span>
+                  <form>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="iq-card ">
+                   
+                          <div class="card-body iq-card-body ">
+
+                            <div class="new-user-info">
+                              <div class="row">
+                                <div role="group" class="form-group col-md-4" id="__BVID__197">
+                                  <label for="fname" class="d-block" id="__BVID__197__BV_label_">Ad Soyad</label>
+                                  <div>
+                                    <span>
+                                      <input type="text" class="form-control" id="__BVID__199">
+                                      <div class="invalid-feedback">
+                                        <span>Bu alan boş bırakılamaz!</span>
+                                      </div>
+                                    </span>
+
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__200">
+                                  <label for="idnumber" class="d-block" id="__BVID__200__BV_label_">Vatandaşlık numarası</label>
+                                  <div>
+                                    <span>
+                                      <input type="text" class="form-control" id="__BVID__202">
+                                      <div class="invalid-feedback">
+                                        <span>Bu alan boş bırakılamaz!</span>
+                                      </div>
+                                    </span>
+
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__203">
+                                  <label for="gender" class="d-block" id="__BVID__203__BV_label_">Cinsiyet</label>
+                                  <div>
+                                    <div dir="auto" class="v-select vs--single vs--searchable" name="GenderID">
+                                      <div id="vs11__combobox" role="combobox" aria-expanded="false" aria-owns="vs11__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                        <div class="vs__selected-options">
+                                          <span class="vs__selected"> Erkek
+                                          </span>
+                                          <input aria-autocomplete="list" aria-labelledby="vs11__combobox" aria-controls="vs11__listbox" type="search" autocomplete="off" class="vs__search">
+                                        </div>
+                                        <div class="vs__actions">
+                                          <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+                                              <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
+                                            </svg>
+                                          </button>
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
+                                            <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+                                          </svg>
+                                          <div class="vs__spinner" style="display: none;">Loading...</div>
+                                        </div>
+                                      </div>
+                                      <ul id="vs11__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                                    </div>
+
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__208">
+                                  <label for="nationality" class="d-block" id="__BVID__208__BV_label_">Uyruk</label>
+                                  <div>
+                                    <div dir="auto" class="v-select vs--single vs--searchable" name="Nationality">
+                                      <div id="vs12__combobox" role="combobox" aria-expanded="false" aria-owns="vs12__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                        <div class="vs__selected-options">
+                                          <input aria-autocomplete="list" aria-labelledby="vs12__combobox" aria-controls="vs12__listbox" type="search" autocomplete="off" class="vs__search">
+                                        </div>
+                                        <div class="vs__actions">
+                                          <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+                                              <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
+                                            </svg>
+                                          </button>
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
+                                            <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+                                          </svg>
+                                          <div class="vs__spinner" style="display: none;">Loading...</div>
+                                        </div>
+                                      </div>
+                                      <ul id="vs12__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__213">
+                                  <label for="mobno" class="d-block" id="__BVID__213__BV_label_">Telefon</label>
+                                  <div>
+                                    <span>
+                                      <span allow-dublicate-number="true">
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <img width="55" src="https://s3.stellamedi.com/stellamedi-cdn/images/country-flags/zz.png" class="img-thumbnail" style="height: calc(1.4em + 1.2rem);">
+                                          </div>
+                                          <input type="tel" class="form-control">
+                                        </div>
+                                      </span>
+                                      <div class="invalid-feedback">
+                                        <span>Bu alan boş bırakılamaz!</span>
+                                      </div>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__217">
+                                  <label for="email" class="d-block" id="__BVID__217__BV_label_">E-Posta</label>
+                                  <div>
+                                    <span>
+                                      <input type="email" id="emailInput" maxlength="250" class="form-control mb-0">
+                                      <div class="invalid-feedback">
+                                        <span></span>
+                                      </div>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__219">
+                                  <label for="referenceSource" class="d-block" id="__BVID__219__BV_label_">Referans kaynağı</label>
+                                  <div>
+                                    <span>
+                                      <div dir="auto" class="v-select vs--single vs--searchable" name="ReferenceSource">
+                                        <div id="vs13__combobox" role="combobox" aria-expanded="false" aria-owns="vs13__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                          <div class="vs__selected-options">
+                                            <input aria-autocomplete="list" aria-labelledby="vs13__combobox" aria-controls="vs13__listbox" type="search" autocomplete="off" class="vs__search">
+                                          </div>
+                                          <div class="vs__actions">
+                                            <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+                                                <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
+                                              </svg>
+                                            </button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
+                                              <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+                                            </svg>
+                                            <div class="vs__spinner" style="display: none;">Loading...</div>
+                                          </div>
+                                        </div>
+                                        <ul id="vs13__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                                      </div>
+                                      <div class="invalid-feedback">
+                                        <span>Bu alan boş bırakılamaz!</span>
+                                      </div>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__225">
+                                  <label for="country" class="d-block" id="__BVID__225__BV_label_">Ülke</label>
+                                  <div>
+                                    <span>
+                                      <div dir="auto" class="v-select vs--single vs--searchable" name="Country">
+                                        <div id="vs14__combobox" role="combobox" aria-expanded="false" aria-owns="vs14__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                          <div class="vs__selected-options">
+                                            <input aria-autocomplete="list" aria-labelledby="vs14__combobox" aria-controls="vs14__listbox" type="search" autocomplete="off" class="vs__search">
+                                          </div>
+                                          <div class="vs__actions">
+                                            <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+                                                <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
+                                              </svg>
+                                            </button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
+                                              <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+                                            </svg>
+                                            <div class="vs__spinner" style="display: none;">Loading...</div>
+                                          </div>
+                                        </div>
+                                        <ul id="vs14__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                                      </div>
+                                      <div class="invalid-feedback">
+                                        <span>Bu alan boş bırakılamaz!</span>
+                                      </div>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__231">
+                                  <label for="city" class="d-block" id="__BVID__231__BV_label_">Şehir</label>
+                                  <div>
+                                    <span>
+                                      <div dir="auto" class="v-select vs--single vs--searchable" name="City">
+                                        <div id="vs15__combobox" role="combobox" aria-expanded="false" aria-owns="vs15__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                          <div class="vs__selected-options">
+                                            <input aria-autocomplete="list" aria-labelledby="vs15__combobox" aria-controls="vs15__listbox" type="search" autocomplete="off" class="vs__search">
+                                          </div>
+                                          <div class="vs__actions">
+                                            <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+                                                <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
+                                              </svg>
+                                            </button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
+                                              <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+                                            </svg>
+                                            <div class="vs__spinner" style="display: none;">Loading...</div>
+                                          </div>
+                                        </div>
+                                        <ul id="vs15__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                                      </div>
+                                      <div class="invalid-feedback">
+                                        <span>Bu alan boş bırakılamaz!</span>
+                                      </div>
+                                    </span>
+
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__237">
+                                  <label for="town" class="d-block" id="__BVID__237__BV_label_">İlçe</label>
+                                  <div>
+                                    <div dir="auto" class="v-select vs--single vs--searchable" name="Town">
+                                      <div id="vs16__combobox" role="combobox" aria-expanded="false" aria-owns="vs16__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                        <div class="vs__selected-options">
+                                          <input aria-autocomplete="list" aria-labelledby="vs16__combobox" aria-controls="vs16__listbox" type="search" autocomplete="off" class="vs__search">
+                                        </div>
+                                        <div class="vs__actions">
+                                          <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+                                              <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
+                                            </svg>
+                                          </button>
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
+                                            <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+                                          </svg>
+                                          <div class="vs__spinner" style="display: none;">Loading...</div>
+                                        </div>
+                                      </div>
+                                      <ul id="vs16__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                                    </div>
+
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__242">
+                                  <label for="exampleInputdate" class="d-block" id="__BVID__242__BV_label_">Doğum tarihi</label>
+                                  <div>
+                                    <span>
+                                      <div class="col-md-12 mx-datepicker" style="padding: 0px !important;">
+                                        <div class="mx-input-wrapper">
+                                          <input type="text" name="DateOfBirth" autocomplete="off" placeholder="GG.AA.YYYY" class="form-control">
+                                          <i class="mx-icon-calendar">
+                                            <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="calendar" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" hidden="hidden" class="svg-inline--fa fa-calendar">
+                                              <path fill="currentColor" d="M112 0C120.8 0 128 7.164 128 16V64H320V16C320 7.164 327.2 0 336 0C344.8 0 352 7.164 352 16V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H96V16C96 7.164 103.2 0 112 0zM416 192H32V448C32 465.7 46.33 480 64 480H384C401.7 480 416 465.7 416 448V192zM384 96H64C46.33 96 32 110.3 32 128V160H416V128C416 110.3 401.7 96 384 96z" class=""></path>
+                                            </svg>
+                                          </i>
+                                        </div>
+                                      </div>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div role="group" class="form-group col-md-4" id="__BVID__248">
+                                  <label for="language" class="d-block" id="__BVID__248__BV_label_">Dil</label>
+                                  <div>
+                                    <div dir="auto" class="v-select vs--single vs--searchable" name="Language">
+                                      <div id="vs17__combobox" role="combobox" aria-expanded="false" aria-owns="vs17__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                        <div class="vs__selected-options">
+                                          <input aria-autocomplete="list" aria-labelledby="vs17__combobox" aria-controls="vs17__listbox" type="search" autocomplete="off" class="vs__search">
+                                        </div>
+                                      </div>
+                                      <ul id="vs17__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="text-right col-lg-12">
+                        <div class="modal-footer">
+                          <div class="b-overlay-wrap position-relative d-inline-block">
+                            <button type="button" class="btn btn-primary"> Kaydet </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </form>
+</div>

@@ -9,6 +9,8 @@ import { PersonnelsComponent } from './components/personnels/personnels.componen
 import { PatientsComponent } from './components/patients/patients.component';
 import { AppointmentsComponent } from './components/appointments/appointments.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { NewComponent } from './components/patients/new/new.component';
+import { AppointmentNewComponent } from './components/appointments/appointment-new/appointment-new.component';
 
 export const routes: Routes = [
 
@@ -20,27 +22,15 @@ export const routes: Routes = [
         path:"",
         component: LayoutsComponent,
         canActivateChild: [() => inject(AuthService).isAuthenticated()],
-        children: [
-            {
-                path:"",
-                component:HomeComponent
-            },
-            {
-                path:"personnels",
-                component:PersonnelsComponent
-            },
-            {
-                path:"patients",
-                component:PatientsComponent
-            },
-            {
-                path:"appointments",
-                component:AppointmentsComponent
-            },
-            {
-                path:"calendar",
-                component:CalendarComponent
-            }
+        children: 
+        [
+            { path:"", component:HomeComponent},
+            { path:"personnels", component:PersonnelsComponent},
+            { path:"patients", component:PatientsComponent},
+            { path:"appointments", component:AppointmentsComponent},
+            {path:"calendar", component:CalendarComponent},
+            {path:"patients/new", component:NewComponent},
+            {path:"appointments/appointment-new", component:AppointmentNewComponent}
         ]
     },
     {
