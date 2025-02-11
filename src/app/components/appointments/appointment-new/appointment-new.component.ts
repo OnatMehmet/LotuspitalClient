@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
 import { FormValidateDirective } from 'form-validate-angular';
 import { PatientPipe } from '../../pipe/patient.pipe';
 import { PatientModel } from '../../../models/patient.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-new',
@@ -20,6 +21,7 @@ import { PatientModel } from '../../../models/patient.model';
 export class AppointmentNewComponent {
 
   constructor(
+          private router: Router,
           private http:HttpService,
           private swal: SwalService
         ){}
@@ -40,22 +42,18 @@ export class AppointmentNewComponent {
   
     ngOnInit(): void {
       this.showSearch =true;
+      this.getAll();
     }
-  
-  patients = [
-    { name: 'Mehmet Onat' },
-    { name: 'Ahmet Yılmaz' },
-    { name: 'Zeynep Demir' },
-    { name: 'Ali Veli' },
-    { name: 'Fatma Kaya' }
-  ]; // Example data (usually fetched from a backend)
+    patients: PatientModel[] = [];
+
+// Example data (usually fetched from a backend)
   filteredPatients = this.patients; // Initial list
 
 // Function to filter patients based on the search term
 filterPatients() {
-  if (this.searchTerm.length >= 2) { // Filter only after 3 or more characters
+  if (this.searchTerm.length >= 1) { // Filter only after 3 or more characters
     this.filteredPatients = this.patients.filter(patient =>
-      patient.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      patient.fullName.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   } else {
     this.filteredPatients = []; // Reset if less than 3 characters
@@ -66,11 +64,17 @@ filterPatients() {
 selectPatient(patient: any) {
   this.searchTerm = patient.name;
   this.filteredPatients = []; // Hide suggestions after selecting a patient
+  this.router.navigate(['patients/patient-profile', patient.id]); // Hasta id'si ile profil sayfasına yönlendiriyoruz
 }
 setActiveTab(tabNumber: number) {
   this.activeTab = tabNumber;
 }
+getAll(){
+  this.http.post<PatientModel[]>("patient/GetAll",{}, (res)=> {
+    this.patients = res.data
 
+  });
+}
 
 add(form:NgForm){
   if(form.valid){

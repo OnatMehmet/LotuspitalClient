@@ -1,5 +1,5 @@
 <div class="mt-4 d-flex justify-content-between align-items-center">
-    <h3>Hasta Sayfası</h3>
+    <h5 class="title">Hastalar</h5>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
@@ -53,7 +53,7 @@
             <td>{{patient.job}}</td>
             <td>{{patient.phoneNumber}}</td>
             <td>{{patient.email}}</td>
-            <td>{{patient.city}} / {{patient.town}}</td>
+            <td>{{patient.city}} / {{patient.district}}</td>
             <!-- <td>{{patient.fullAddress}}</td> -->
             <td>
               <button (click)="get(patient)" data-bs-toggle="modal"  data-bs-target="#updateModal" class="btn btn-sm btn-outline-primary me-1">
@@ -195,7 +195,7 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="district" >İlçe</label>
-                <input class="form-control" type="text" [(ngModel)] ="createModel.town" name="district" required minlength="3">
+                <input class="form-control" type="text" [(ngModel)] ="createModel.district" name="district" required minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>
@@ -358,7 +358,7 @@
             <div class="col-md-6">
               <div class="form-group mt-2">
                 <label for="district" >İlçe</label>
-                <input class="form-control" type="text" [(ngModel)] ="createModel.town" name="updateDistrict"  minlength="3">
+                <input class="form-control" type="text" [(ngModel)] ="createModel.district" name="updateDistrict"  minlength="3">
                 <div class="invalid-feedback"></div>
               </div>
             </div>

@@ -11,6 +11,7 @@ import { AppointmentsComponent } from './components/appointments/appointments.co
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { NewComponent } from './components/patients/new/new.component';
 import { AppointmentNewComponent } from './components/appointments/appointment-new/appointment-new.component';
+import { PatientProfileComponent } from './components/patients/patient-profile/patient-profile.component';
 
 export const routes: Routes = [
 
@@ -30,7 +31,8 @@ export const routes: Routes = [
             { path:"appointments", component:AppointmentsComponent},
             {path:"calendar", component:CalendarComponent},
             {path:"patients/new", component:NewComponent},
-            {path:"appointments/appointment-new", component:AppointmentNewComponent}
+            {path:"appointments/appointment-new", component:AppointmentNewComponent},
+            { path: 'hasta-profil/:id', component: PatientProfileComponent}
         ]
     },
     {

@@ -1,0 +1,57 @@
+<div class="profile-container">
+    <h2>Hasta Profili</h2>
+  
+    <form class="profile-form">
+      <div class="form-group">
+        <label for="name">Ad</label>
+        <input type="text" id="name" [(ngModel)]="patientProfile.name" name="name" placeholder="Ad" />
+      </div>
+  
+      <div class="form-group">
+        <label for="surname">Soyad</label>
+        <input type="text" id="surname" [(ngModel)]="patientProfile.surname" name="surname" placeholder="Soyad" />
+      </div>
+  
+      <div class="form-group">
+        <label for="age">Yaş</label>
+        <input type="number" id="age" [(ngModel)]="patientProfile.age" name="age" placeholder="Yaş" />
+      </div>
+  
+      <div class="form-group">
+        <label for="gender">Cinsiyet</label>
+        <select id="gender" [(ngModel)]="patientProfile.gender" name="gender">
+          <option value="Erkek">Erkek</option>
+          <option value="Kadın">Kadın</option>
+          <option value="Diğer">Diğer</option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="phone">Telefon</label>
+        <input type="text" id="phone" [(ngModel)]="patientProfile.phone" name="phone" placeholder="Telefon" />
+      </div>
+  
+      <div class="form-group">
+        <label for="email">E-posta</label>
+        <input type="email" id="email" [(ngModel)]="patientProfile.email" name="email" placeholder="E-posta" />
+      </div>
+  
+      <div class="form-group">
+        <label for="address">Adres</label>
+        <textarea id="address" [(ngModel)]="patientProfile.address" name="address" placeholder="Adres"></textarea>
+      </div>
+  
+      <button (click)="updateProfile(patientProfile)">Profili Güncelle</button>
+    </form>
+  
+    <div class="profile-details">
+      <h3>Hasta Bilgileri</h3>
+      <p><strong>Ad Soyad:</strong> {{ patientProfile.name }} {{ patientProfile.surname }}</p>
+      <p><strong>Yaş:</strong> {{ patientProfile.age }}</p>
+      <p><strong>Cinsiyet:</strong> {{ patientProfile.gender }}</p>
+      <p><strong>Telefon:</strong> {{ patientProfile.phone }}</p>
+      <p><strong>E-posta:</strong> {{ patientProfile.email }}</p>
+      <p><strong>Adres:</strong> {{ patientProfile.address }}</p>
+    </div>
+  </div>
+  

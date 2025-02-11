@@ -7,6 +7,6 @@ export class CreateAppointmentModel {
     lastName: string ="";
     identityNumber:string ="";
     city:string ="";
-    town: string ="";
+    district: string ="";
     fullAddress: string ="";
 }

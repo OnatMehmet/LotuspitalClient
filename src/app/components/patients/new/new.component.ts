@@ -32,7 +32,7 @@ export class NewComponent implements OnInit {
   updateModel: PatientModel = new PatientModel();
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    //dssdf
   }
 
    add(form:NgForm){
