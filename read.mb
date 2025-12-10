@@ -1,0 +1,115 @@
+📋 Kurulum Adımları
+1️⃣ WebSocket Servisini Oluşturun
+Dosya: src/app/services/websocket-eimza.service.ts
+Artifact: "WebSocket E-İmza Servisi - Tam Versiyon"
+Bu servis:
+
+✅ Terminal listesi
+✅ Sertifika listesi
+✅ Login
+✅ Sertifika seçimi
+✅ PDF imzalama
+
+
+2️⃣ CardLogin Component'i Güncelleyin
+Dosya: src/app/components/cardlogin/cardlogin.component.ts
+Artifact: "CardLogin Component - Tam Entegre (WebSocket)"
+Import değişikliği:
+typescript// ESKİ - BUNU KALDIR
+// import { IESignatureService } from '../../services/iesignatureservice';
+
+// YENİ - BUNU EKLE
+import { WebSocketEimzaService, Certificate, Terminal } from '../services/websocket-eimza.service';
+Constructor değişikliği:
+typescript// ESKİ
+// constructor(private esignatureService: IESignatureService, ...)
+
+// YENİ
+constructor(private wsEimzaService: WebSocketEimzaService, ...)
+HTML dosyası aynı kalıyor! Değiştirmeyin.
+
+3️⃣ PdfSign Component'i Güncelleyin
+Dosya: src/app/components/pdfsign/pdfsign.component.ts
+Artifact: "PdfSign Component - Tam Entegre (WebSocket)"
+Import değişikliği:
+typescript// ESKİ - BUNU KALDIR
+// import { IESignatureService } from '../../services/iesignatureservice';
+
+// YENİ - BUNU EKLE
+import { WebSocketEimzaService } from '../services/websocket-eimza.service';
+Constructor değişikliği:
+typescript// ESKİ
+// constructor(private esignatureService: IESignatureService, ...)
+
+// YENİ
+constructor(private wsEimzaService: WebSocketEimzaService, ...)
+HTML dosyası aynı kalıyor! Değiştirmeyin.
+
+4️⃣ Module'e Ekleyin
+Dosya: app.module.ts
+typescriptimport { WebSocketEimzaService } from './services/websocket-eimza.service';
+
+@NgModule({
+  declarations: [
+    CardLoginComponent,
+    PdfSignComponent
+  ],
+  providers: [
+    WebSocketEimzaService  // YENİ SERVİS EKLE
+  ]
+})
+```
+
+---
+
+## ✅ Test Edin
+
+1. **JNLP uygulamasını başlatın** (Port 5000)
+2. **Angular uygulamanızı başlatın**: `ng serve`
+3. **PDF imzalama sayfasını açın**
+4. **"Pdf İmzala"** butonuna tıklayın
+5. **Browser console'u açın** (F12) - Tüm adımları göreceksiniz:
+```
+[PdfSign] onSignPdf çağrıldı
+[PdfSign] CardLogin modal açılıyor...
+[CardLogin] Component oluşturuldu
+[WS Service] Terminal listesi isteniyor...
+[CardLogin] Terminal listesi alınıyor...
+[CardLogin] doLogin çağrıldı
+[WS Service] Login... Terminal: ...
+[WS Service] Sertifika listesi isteniyor...
+[CardLogin] ✅ Sertifikalar başarıyla yüklendi
+[CardLogin] Sertifika seçildi: ...
+[PdfSign] PDF imzalama başlatılıyor...
+[WS Service] PDF imzalama başlatılıyor...
+[PdfSign] ✅ PDF başarıyla imzalandı
+[PdfSign] ✅ İmzalı PDF sunucuya yüklendi
+```
+
+---
+
+## 🎯 Akış Özeti
+```
+Kullanıcı "Pdf İmzala" tıklar
+    ↓
+CardLogin Modal açılır
+    ↓
+Terminal listesi otomatik yüklenir
+    ↓
+Kullanıcı: Kart okuyucu seç + PIN gir
+    ↓
+"Akıllı Kart Giriş" butonuna tıkla
+    ↓
+Sertifika listesi yüklenir
+    ↓
+Kullanıcı: Sertifika seç
+    ↓
+"Sertifika Seç" butonuna tıkla
+    ↓
+Modal kapanır
+    ↓
+PDF otomatik imzalanır
+    ↓
+İmzalı PDF sunucuya yüklenir
+    ↓
+Başarılı! ✅
