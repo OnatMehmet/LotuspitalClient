@@ -33,4 +33,275 @@ Kullanıcı: Sertifika seçer + "Sertifika Seç" tıklar
     ↓
 selectCertificate() çalışır
     ↓
+
 Modal kapanır - DialogResult.OK döner
+
+
+
+
+----------------------------------------------
+# 🔄 E-İmza Akış Açıklaması
+
+## 📋 Tam Akış (Adım Adım)
+
+### 1️⃣ PDF İmzalama Başlatma
+**Kullanıcı:** "Pdf İmzala" butonuna tıklar
+
+```
+[PdfSign] onSignPdf() çağrıldı
+[PdfSign] CardLogin modal açılıyor...
+```
+
+---
+
+### 2️⃣ CardLogin Modal Açılır
+
+**Otomatik olarak:**
+- Modal açılır
+- `ngOnInit()` çalışır
+- Terminal listesi **otomatik** çekilir
+
+```
+[CardLogin] Component oluşturuldu
+[CardLogin] ngOnInit başladı
+[CardLogin] ✅ WebSocket bağlantısı var
+[CardLogin] Terminal listesi alınıyor...
+[WS Service] getTerminals()
+[WS Service] 📋 Terminal: 2
+[CardLogin] ✅ Terminal listesi başarıyla alındı
+[CardLogin] Terminal sayısı: 2
+[CardLogin] İlk terminal otomatik seçildi: ACS ACR122U PICC Interface
+```
+
+**Kullanıcı şimdi görür:**
+- ✅ Kart Okuyucu dropdown'u (terminal listesi dolu)
+- ⬜ PIN input alanı (boş)
+- 🔘 "Akıllı Kart Giriş" butonu (aktif)
+- 📋 Sağ taraf: "Lütfen öncelikle giriş yapın" (sertifika listesi boş)
+
+---
+
+### 3️⃣ Kullanıcı İşlemleri
+
+**Kullanıcı yapar:**
+1. Kart okuyucu zaten seçili (veya başka birini seçer)
+2. **PIN girişi yapar** (örn: 1234)
+3. **"Akıllı Kart Giriş"** butonuna tıklar
+
+---
+
+### 4️⃣ Login ve Sertifika Çekme
+
+**`doLogin()` metodu çalışır:**
+
+```
+[CardLogin] doLogin() çağrıldı
+[CardLogin] Terminal: ACS ACR122U PICC Interface
+[CardLogin] DLL: akisp11.dll
+[CardLogin] Login başlatılıyor...
+
+[CardLogin] 1/3 - Kart kütüphanesi gönderiliyor...
+[WS Service] sendCardLibrary(): akisp11.dll
+[CardLogin] ✅ Kart kütüphanesi gönderildi
+
+[CardLogin] 2/3 - Login işlemi başlatılıyor...
+[WS Service] login(): ACS ACR122U PICC Interface
+[CardLogin] ✅ Login başarılı
+
+[CardLogin] 3/3 - Sertifika listesi alınıyor...
+[WS Service] getCertificates()
+[WS Service] 📜 Sertifika: 2
+[CardLogin] ✅ Sertifikalar başarıyla alındı
+[CardLogin] Sertifika sayısı: 2
+[CardLogin] 🎉 Sertifikalar sağ tarafta gösteriliyor
+```
+
+**Kullanıcı şimdi görür:**
+- ✅ Sağ tarafta sertifika listesi (2 adet sertifika)
+- 🔘 "Sertifika Seç" butonu (aktif)
+
+---
+
+### 5️⃣ Sertifika Seçimi
+
+**Kullanıcı yapar:**
+1. Listeden bir sertifika seçer (tıklar)
+2. **"Sertifika Seç"** butonuna tıklar
+
+**`selectCertificate()` metodu çalışır:**
+
+```
+[CardLogin] selectCertificate() çağrıldı
+[CardLogin] Sertifika seçildi: AHMET YILMAZ
+[CardLogin] Serial Number: 123456789
+[CardLogin] Sertifika seçimi WebSocket'e bildiriliyor...
+[WS Service] selectCertificate(): 123456789
+[CardLogin] ✅ Sertifika başarıyla seçildi
+[CardLogin] Modal kapatılıyor - Başarı döndürülüyor
+```
+
+**Modal kapanır** ve PdfSign component'e döner.
+
+---
+
+### 6️⃣ PDF İmzalama
+
+**PdfSign devam eder:**
+
+```
+[PdfSign] ✅ Sertifika seçildi
+[PdfSign] PDF imzalama başlatılıyor...
+[PdfSign] signPdfWithWebSocket() başladı
+
+[WS Service] signPdf()
+[WS Service] PDF Base64 dönüşümü tamamlandı
+[WS Service] 📤 Gönderiliyor - İşlem ID: 14 (UI mode)
+[WS Service] 📤 Gönderiliyor - İşlem ID: 12 (PDF data)
+[WS Service] ⏳ Yanıt bekleniyor - İşlem ID: 12
+
+... (E-imza uygulaması PIN ister, kullanıcı PIN girer) ...
+
+[WS Service] 📨 Mesaj alındı
+[WS Service] İşlem ID: 12 Başarılı: true
+[WS Service] ✅ PDF imzalandı
+[PdfSign] ✅ PDF başarıyla imzalandı
+```
+
+---
+
+### 7️⃣ İmzalı PDF Yükleme
+
+```
+[PdfSign] İmzalı PDF sunucuya yükleniyor...
+[PdfSign] ✅ İmzalı PDF sunucuya yüklendi
+[PdfSign] Modal kapatılıyor
+```
+
+**İşlem tamamlandı!** ✅
+
+---
+
+## 🎯 Kullanıcı Perspektifi
+
+### CardLogin Modal'da:
+
+**Adım 1: Modal açıldığında**
+- Terminal listesi otomatik gelir ✅
+- İlk terminal otomatik seçilir
+
+**Adım 2: Kullanıcı**
+- PIN girer (örn: 1234)
+- "Akıllı Kart Giriş" butonuna tıklar
+
+**Adım 3: Otomatik**
+- Sertifika listesi sağ tarafta belirir
+
+**Adım 4: Kullanıcı**
+- Sertifika seçer
+- "Sertifika Seç" butonuna tıklar
+
+**Adım 5: Modal kapanır**
+
+---
+
+## 🔍 WebSocket Mesaj Akışı
+
+| Sıra | İşlem | İşlem ID | Gönderilen | Dönen |
+|------|-------|----------|------------|-------|
+| 1 | Terminal listesi | `"2"` | `""` | `"Terminal1\|Terminal2"` |
+| 2 | DLL gönder | `"9"` | `"akisp11.dll"` | `"OK"` |
+| 3 | Login | `"4"` | `"Terminal;PIN"` | `"OK"` |
+| 4 | Sertifika listesi | `"3"` | `""` | `"SerialNo;Issuer;Subject;..."` |
+| 5 | Sertifika seç | `"5"` | `"SerialNumber"` | `"OK"` |
+| 6 | UI mode | `"14"` | `"false"` | `"OK"` |
+| 7 | PDF imzala | `"12"` | `base64PdfData` | `base64SignedPdf` |
+
+---
+
+## ✅ Başarı Kontrolü
+
+Her adımda console'da göreceksiniz:
+
+```
+✅ Terminal listesi başarıyla alındı
+✅ Kart kütüphanesi gönderildi
+✅ Login başarılı
+✅ Sertifikalar başarıyla alındı
+✅ Sertifika başarıyla seçildi
+✅ PDF başarıyla imzalandı
+✅ İmzalı PDF sunucuya yüklendi
+```
+
+---
+
+## 🐛 Olası Hatalar ve Çözümler
+
+### Terminal listesi gelmiyor
+
+**Hata:** "Kart okuyucu bulunamadı"
+
+**Sebep:** 
+- JNLP uygulaması çalışmıyor
+- Kart okuyucu takılı değil
+
+**Çözüm:**
+1. JNLP uygulamasını başlatın
+2. Kart okuyucuyu takın
+3. Sayfayı yenileyin
+
+---
+
+### Login başarısız
+
+**Hata:** "Giriş başarısız"
+
+**Sebep:**
+- Yanlış PIN
+- Kart takılı değil
+- Kart okuyucu yanlış seçildi
+
+**Çözüm:**
+1. PIN'i kontrol edin
+2. Kartın takılı olduğundan emin olun
+3. Doğru kart okuyucuyu seçin
+
+---
+
+### Sertifika gelmiyor
+
+**Hata:** "Kartınızda sertifika bulunamadı"
+
+**Sebep:**
+- Login başarısız oldu
+- Kartta sertifika yok
+
+**Çözüm:**
+1. Login işlemini tekrar yapın
+2. Farklı bir kart deneyin
+
+---
+
+## 💡 Önemli Notlar
+
+1. **Terminal listesi otomatik gelir** - Kullanıcı beklemez
+2. **PIN girdikten sonra butona tıklanır** - Otomatik değil
+3. **Sertifika listesi login sonrası gelir** - Otomatik
+4. **Sertifika seçimi manuel** - Kullanıcı seçer ve butona tıklar
+5. **Modal kapandıktan sonra PDF imzalanır** - Otomatik
+
+---
+
+## 🎨 UI Durumları
+
+| Durum | Kart Okuyucu | PIN | Akıllı Kart Giriş | Sertifika Listesi | Sertifika Seç |
+|-------|--------------|-----|-------------------|-------------------|---------------|
+| **Başlangıç** | Dolu ✅ | Boş ⬜ | Aktif 🟢 | "Lütfen öncelikle giriş yapın" | Pasif 🔴 |
+| **PIN girildi** | Dolu ✅ | Dolu ✅ | Aktif 🟢 | "Lütfen öncelikle giriş yapın" | Pasif 🔴 |
+| **Login sonrası** | Dolu ✅ | Dolu ✅ | Aktif 🟢 | Sertifikalar gösteriliyor ✅ | Aktif 🟢 |
+| **Sertifika seçildi** | Dolu ✅ | Dolu ✅ | Aktif 🟢 | Seçili sertifika ✅ | Aktif 🟢 |
+
+---
+
+Bu akış tam olarak istediğiniz gibi! 🚀
+
+
