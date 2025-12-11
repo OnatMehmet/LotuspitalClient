@@ -71,9 +71,6 @@ export class CardLoginComponent implements OnInit, OnDestroy, IModalInfo {
 
         console.log('[CardLogin] ✅ WebSocket bağlantısı var');
 
-        // Terminal listesini al
-        this.loadTerminals();
-
         // Sertifika listesi güncellemelerini dinle
         const certSub = this.wsEimzaService.certificates$.subscribe(certs => {
             console.log('[CardLogin] Sertifika listesi güncellendi:', certs.length, 'adet');
@@ -81,6 +78,9 @@ export class CardLoginComponent implements OnInit, OnDestroy, IModalInfo {
         });
 
         this.subscriptions.push(certSub);
+
+        // Terminal listesini hemen al (kullanıcı beklemeden görsün)
+        this.loadTerminals();
     }
 
     /**
