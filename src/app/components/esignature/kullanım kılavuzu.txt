@@ -1,0 +1,236 @@
+🚀 WebSocket E-İmza Entegrasyonu - Kurulum Kılavuzu
+📦 Hazırlanan Dosyalar
+
+WebSocket E-İmza Servisi - Artifact 1
+CardLogin Component - Artifact 2
+PdfSign Component - Artifact 3
+
+
+🔧 Kurulum Adımları
+1️⃣ WebSocket Servisini Oluşturun
+Dosya: src/app/services/websocket-eimza.service.ts
+Artifact 1'deki kodu kopyalayın ve bu dosyayı oluşturun.
+Bu servis şunları sağlar:
+
+✅ Terminal (kart okuyucu) listesi
+✅ Login (PIN ile giriş)
+✅ Sertifika listesi
+✅ Sertifika seçimi
+✅ PDF imzalama
+
+
+2️⃣ CardLogin Component'i Güncelleyin
+Dosya: src/app/components/cardlogin/cardlogin.component.ts
+Artifact 2'deki kodu kopyalayın.
+DEĞİŞİKLİKLER:
+typescript// ❌ ESKİ İMPORT - KALDIR
+// import { IESignatureService } from '../../services/iesignatureservice';
+
+// ✅ YENİ İMPORT - EKLE
+import { WebSocketEimzaService, Certificate } from '../services/websocket-eimza.service';
+import { Subscription } from 'rxjs';
+typescript// ❌ ESKİ CONSTRUCTOR - DEĞİŞTİR
+// constructor(private signService: IESignatureService, ...)
+
+// ✅ YENİ CONSTRUCTOR - KULLAN
+constructor(
+    private wsEimzaService: WebSocketEimzaService,
+    private modalStateService: IModalStateService
+)
+HTML dosyası (cardlogin.component.html) AYNI KALIYOR! Değiştirmeyin.
+
+3️⃣ PdfSign Component'i Güncelleyin
+Dosya: src/app/components/pdfsign/pdfsign.component.ts
+Artifact 3'teki kodu kopyalayın.
+DEĞİŞİKLİKLER:
+typescript// ❌ ESKİ İMPORT - KALDIR
+// import { IESignatureService } from '../../services/iesignatureservice';
+
+// ✅ YENİ İMPORT - EKLE
+import { WebSocketEimzaService } from '../services/websocket-eimza.service';
+import { IModalDialogService } from '../../services/imodaldialogservice';
+import { CardLoginComponent } from '../cardlogin/cardlogin.component';
+typescript// ❌ ESKİ CONSTRUCTOR - DEĞİŞTİR
+// constructor(private esignatureService: IESignatureService, ...)
+
+// ✅ YENİ CONSTRUCTOR - KULLAN
+constructor(
+    private fileUploadService: IFileUploadService,
+    private wsEimzaService: WebSocketEimzaService,
+    private modalStateService: IModalStateService,
+    private modalDialogService: IModalDialogService
+)
+HTML dosyası (pdfsign.component.html) AYNI KALIYOR! Değiştirmeyin.
+
+4️⃣ Module'e Ekleyin
+Dosya: app.module.ts
+typescriptimport { WebSocketEimzaService } from './services/websocket-eimza.service';
+
+@NgModule({
+  declarations: [
+    CardLoginComponent,
+    PdfSignComponent
+  ],
+  providers: [
+    WebSocketEimzaService  // ✅ YENİ SERVİS EKLE
+  ]
+})
+export class AppModule { }
+
+5️⃣ CertList Component'i KALDIRIN (Opsiyonel)
+CertList artık kullanılmıyor çünkü sertifika listesi CardLogin içinde gösteriliyor.
+Eğer başka yerde kullanılmıyorsa:
+
+certlist.component.ts silebilirsiniz
+certlist.component.html silebilirsiniz
+Module'den declaration'ı kaldırabilirsiniz
+
+
+✅ Test Edin
+1. JNLP Uygulamasını Başlatın
+Port 5000'de çalıştığından emin olun:
+bash# Windows'ta port kontrolü
+netstat -ano | findstr :5000
+2. Angular Uygulamanızı Başlatın
+bashng serve
+3. Browser Console'u Açın
+F12 tuşuna basın ve Console sekmesine geçin.
+4. PDF İmzalama Sayfasını Açın
+PDF imzalama modal'ını açın.
+5. "Pdf İmzala" Butonuna Tıklayın
+Beklenen Akış:
+[PdfSign] onSignPdf() çağrıldı
+[PdfSign] CardLogin modal açılıyor...
+    ↓
+[CardLogin] Component oluşturuldu
+[CardLogin] ngOnInit
+[CardLogin] Terminal listesi yükleniyor...
+[WS Service] getTerminals()
+[WS Service] 📋 Terminal: 2
+[CardLogin] İlk terminal seçildi: ...
+    ↓
+KULLANICI: Terminal seç + PIN gir + "Akıllı Kart Giriş" tıkla
+    ↓
+[CardLogin] doLogin() çağrıldı
+[WS Service] sendCardLibrary(): akisp11.dll
+[WS Service] login(): ...
+[WS Service] getCertificates()
+[WS Service] 📜 Sertifika: 2
+[CardLogin] ✅ Login başarılı
+[CardLogin] ✅ Sertifikalar alındı: 2
+    ↓
+KULLANICI: Sertifika seç + "Sertifika Seç" tıkla
+    ↓
+[CardLogin] selectCertificate() çağrıldı
+[WS Service] selectCertificate(): ...
+[CardLogin] ✅ Sertifika başarıyla seçildi
+[CardLogin] Modal kapatılıyor
+    ↓
+[PdfSign] ✅ Sertifika seçildi
+[PdfSign] PDF imzalama başlatılıyor...
+[WS Service] signPdf()
+[WS Service] PDF Base64 dönüşümü tamamlandı
+[WS Service] ✅ PDF imzalandı
+[PdfSign] ✅ PDF başarıyla imzalandı
+[PdfSign] İmzalı PDF sunucuya yükleniyor...
+[PdfSign] ✅ İmzalı PDF sunucuya yüklendi
+[PdfSign] Modal kapatılıyor
+    ↓
+✅ BAŞARILI!
+
+🎯 Kullanıcı Akışı
+
+"Pdf İmzala" butonuna tıkla
+CardLogin Modal açılır:
+
+Terminal listesi otomatik yüklenir
+Kullanıcı terminal (kart okuyucu) seçer
+PIN girer
+"Akıllı Kart Giriş" butonuna tıklar
+Sağ tarafta sertifika listesi belirir
+Sertifika seçer
+"Sertifika Seç" butonuna tıklar
+
+
+Modal kapanır
+PDF otomatik imzalanır
+İmzalı PDF sunucuya yüklenir
+İşlem tamamlanır ✅
+
+
+🐛 Sorun Giderme
+WebSocket Bağlanamıyor
+Hata: "E-İmza uygulamasına bağlanılamadı"
+Çözüm:
+
+JNLP uygulamasının çalıştığından emin olun
+Port 5000'in açık olduğunu kontrol edin
+Browser console'da WebSocket hatalarını kontrol edin
+
+bashnetstat -ano | findstr :5000
+Terminal Listesi Gelmiyor
+Hata: "Kart okuyucu bulunamadı"
+Çözüm:
+
+Kart okuyucunuzun takılı olduğundan emin olun
+JNLP uygulamasını yeniden başlatın
+Browser console'da hata loglarını kontrol edin
+
+Sertifika Listesi Gelmiyor
+Hata: "Kartınızda sertifika bulunamadı"
+Çözüm:
+
+PIN'in doğru girildiğinden emin olun
+Kartın takılı olduğunu kontrol edin
+Doğru kart kütüphanesinin seçildiğinden emin olun
+
+İmzalama Zaman Aşımı
+Hata: "İşlem zaman aşımına uğradı"
+Çözüm:
+
+E-imza uygulamasında PIN girme ekranı açık mı kontrol edin
+Browser console'da son durumu kontrol edin
+
+
+📋 Console Logları
+Başarılı bir imzalama işleminde şu logları göreceksiniz:
+✅ [WS Service] Bağlantı başarılı
+✅ [CardLogin] Terminal listesi alındı
+✅ [CardLogin] Login başarılı
+✅ [CardLogin] Sertifikalar alındı: 2
+✅ [CardLogin] Sertifika başarıyla seçildi
+✅ [PdfSign] PDF başarıyla imzalandı
+✅ [PdfSign] İmzalı PDF sunucuya yüklendi
+
+🎉 Başarı Kriterleri
+
+ JNLP uygulaması çalışıyor (Port 5000)
+ WebSocket bağlantısı kuruldu
+ Terminal listesi geliyor
+ Login işlemi çalışıyor
+ Sertifika listesi geliyor
+ Sertifika seçimi çalışıyor
+ PDF imzalanıyor
+ İmzalı PDF sunucuya yükleniyor
+ Modal düzgün kapanıyor
+
+
+💡 Önemli Notlar
+
+HTML dosyaları değişmedi - Sadece TypeScript dosyalarını güncelleyin
+Eski servis kullanılmıyor - IESignatureService artık kullanılmıyor
+CertList component gereksiz - Sertifikalar CardLogin içinde gösteriliyor
+Tüm loglar console'da - Hata ayıklama için F12 kullanın
+WebSocket otomatik bağlanır - Servis başlatıldığında otomatik bağlantı kurar
+
+
+🔄 Eski Sistemden Farklar
+ÖzellikEski SistemYeni SistemİletişimHTTP APIWebSocketHızDaha yavaşÇok hızlıGerçek zamanlıHayırEvetBağımlılıkBackend servisiSadece JNLPSertifika listesiAyrı componentCardLogin içindeConsole loglarıAzDetaylı
+
+❓ Yardım
+Herhangi bir sorun yaşarsanız:
+
+Browser console'u kontrol edin (F12)
+WebSocket bağlantı durumunu kontrol edin
+JNLP uygulamasının log dosyasını kontrol edin
+Network sekmesinde WebSocket mesajlarını inceleyin

@@ -1,0 +1,36 @@
+constructor(
+    private wsEimzaService: WebSocketEimzaService,
+    private modalStateService: IModalStateService
+)
+```
+
+3. **Tüm metodlar WebSocket kullanıyor:**
+- `loadTerminals()` - Terminal listesi
+- `doLogin()` - PIN ile giriş + Sertifika listesi
+- `selectCertificate()` - Sertifika seçimi
+
+4. **Detaylı console logları** - Her adımı takip edebilirsiniz
+
+5. **HTML aynı kalıyor** - cardlogin.component.html değişmiyor
+
+### 🔄 Akış:
+```
+Modal açılır
+    ↓
+ngOnInit() çalışır
+    ↓
+Terminal listesi otomatik gelir
+    ↓
+Kullanıcı: Terminal + PIN + "Akıllı Kart Giriş" tıklar
+    ↓
+doLogin() çalışır
+    ↓
+1. Kart kütüphanesi gönderilir
+2. Login yapılır
+3. Sertifika listesi gelir (sağda gösterilir)
+    ↓
+Kullanıcı: Sertifika seçer + "Sertifika Seç" tıklar
+    ↓
+selectCertificate() çalışır
+    ↓
+Modal kapanır - DialogResult.OK döner
