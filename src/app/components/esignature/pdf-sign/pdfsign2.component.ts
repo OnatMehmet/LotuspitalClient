@@ -242,6 +242,17 @@ export class PdfSignComponent implements OnInit, AfterViewInit, OnDestroy, IModa
     if (response.data) {
       const signedPdfBase64 = response.data;
       console.log('İmzalı PDF alındı, uzunluk:', signedPdfBase64.length);
+           
+      const first = response.data.indexOf('#');
+      const second = response.data.indexOf('#', first + 1);
+
+      const tc = response.data.slice(0, first);
+      const adsoyad = response.data.slice(first + 1, second);
+      const pdf = response.data.slice(second + 1);
+
+      console.log( "İmzlayan TC: " +tc); // tc
+      console.log("İmzalayan Adı Soyadı: " + adsoyad); // ad soyad
+      console.log("PDF Base64: " + pdf); // pdf
       
       // AYNI ŞEKİLDE backend'e gönder (mevcut yöntem gibi)
       try {
