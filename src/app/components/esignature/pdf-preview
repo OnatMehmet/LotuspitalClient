@@ -1,0 +1,77 @@
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { IFileUploadService } from '../../services/ifileuploadservice';
+import { map } from 'rxjs/operators';
+
+@Component({
+  selector: 'app-pdf-preview',
+  templateUrl: './pdf-preview.component.html',
+  styleUrls: ['./pdf-preview.component.scss']
+})
+export class PdfPreviewComponent implements OnInit {
+
+  @Input() dataId: string;
+  @Input() reportName: string;
+  @Input() zIndex: number = 1000; // Z-index için
+  
+  @Output() onDecision = new EventEmitter<{ dataId: string, decision: 'save' | 'cancel', pdfBytes?: Blob }>();
+  
+  public errorMessage: string;
+  public pdfBytes: Blob;
+  public isLoading: boolean = true;
+  
+  @ViewChild('pdfViewer') public pdfViewer;
+
+  constructor(private fileUploadService: IFileUploadService) { }
+
+  ngOnInit() {
+    if (this.dataId) {
+      this.downloadFile(this.dataId).subscribe(
+        (res) => {
+          this.pdfBytes = res;
+          this.isLoading = false;
+          
+          // PDF viewer'a yükle
+          if (this.pdfViewer) {
+            this.pdfViewer.pdfSrc = res;
+            this.pdfViewer.refresh();
+          }
+        },
+        (err) => {
+          this.errorMessage = 'PDF yüklenirken hata oluştu';
+          this.isLoading = false;
+        }
+      );
+    }
+  }
+
+  private downloadFile(dataId: string): any {
+    const input = { dataId: dataId, mimeType: "application/pdf" };
+    return this.fileUploadService.downloadBinaryData(input.dataId, input.mimeType).pipe(
+      map((result: any) => {
+        return new Blob([result.body]);
+      })
+    );
+  }
+
+  /**
+   * Kaydet - PDF seçilsin
+   */
+  onSave() {
+    this.onDecision.emit({
+      dataId: this.dataId,
+      decision: 'save',
+      pdfBytes: this.pdfBytes
+    });
+  }
+
+  /**
+   * Vazgeç - PDF seçilmesin
+   */
+  onCancel() {
+    this.onDecision.emit({
+      dataId: this.dataId,
+      decision: 'cancel'
+    });
+  }
+
+}
