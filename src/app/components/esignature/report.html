@@ -1,0 +1,78 @@
+<div class="report-list-container">
+  <h2>Rapor Listesi</h2>
+
+  <!-- Rapor Listesi -->
+  <div class="report-list">
+    <div class="report-item" *ngFor="let report of reports">
+      <label>
+        <input 
+          type="checkbox" 
+          [(ngModel)]="report.selected"
+          [disabled]="isSigningInProgress || isReviewMode">
+        <span [class.approved]="report.approved === true" 
+              [class.rejected]="report.approved === false">
+          {{ report.name }}
+          <span *ngIf="report.approved === true" class="badge badge-success">✓ Onaylandı</span>
+          <span *ngIf="report.approved === false" class="badge badge-secondary">✗ Vazgeçildi</span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Mesajlar -->
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    <i class="fa fa-exclamation-circle"></i>
+    {{ errorMessage }}
+  </div>
+
+  <div class="alert alert-success" *ngIf="successMessage">
+    <i class="fa fa-check-circle"></i>
+    {{ successMessage }}
+  </div>
+
+  <div class="alert alert-info" *ngIf="signingProgress">
+    <i class="fa fa-spinner fa-spin"></i>
+    {{ signingProgress }}
+  </div>
+
+  <!-- İnceleme Sonuçları -->
+  <div class="review-summary" *ngIf="approvedReports.length > 0 && !isReviewMode">
+    <h4>İnceleme Sonuçları:</h4>
+    <p>
+      <strong>Onaylanan:</strong> {{ getApprovedCount() }} rapor hazır
+    </p>
+  </div>
+
+  <!-- Butonlar -->
+  <div class="action-buttons">
+    <!-- Seçilenleri İncele -->
+    <button 
+      class="btn btn-primary"
+      (click)="onReviewSelected()"
+      [disabled]="getSelectedCount() === 0 || isSigningInProgress || isReviewMode">
+      <i class="fa fa-eye"></i>
+      Seçilenleri İncele ({{ getSelectedCount() }})
+    </button>
+
+    <!-- Seçilenleri Onayla ve İmzala -->
+    <button 
+      class="btn btn-success"
+      (click)="onApproveAndSign()"
+      [disabled]="getApprovedCount() === 0 || isSigningInProgress || isReviewMode">
+      <i class="fa fa-signature"></i>
+      Seçilenleri Onayla ve İmzala ({{ getApprovedCount() }})
+      <span class="spinner-border spinner-border-sm ml-2" *ngIf="isSigningInProgress"></span>
+    </button>
+  </div>
+
+</div>
+
+<!-- PDF Preview Popups (Üst üste) -->
+<app-pdf-preview 
+  *ngFor="let report of reviewingReports; let i = index"
+  [dataId]="report.dataId"
+  [reportName]="report.name"
+  [zIndex]="getZIndex(i)"
+  (onDecision)="onPdfDecision($event)"
+  [hidden]="!report.showPreview">
+</app-pdf-preview>
