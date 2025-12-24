@@ -1,0 +1,1328 @@
+# 📦 Toplu PDF İmzalama Sistemi - Tüm Dosyalar
+
+## 📁 Dosya 1: websocket-esignature.service.ts
+
+**Konum:** `src/app/services/websocket-esignature.service.ts`
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Subject, BehaviorSubject } from 'rxjs';
+
+export interface EImzaResponse {
+  data: string;
+  islemId: string;
+  kullaniciId: string;
+  hataMesaji: string;
+  sertifikaId: string;
+  akilliKartIsim: string;
+}
+
+export interface DllOption {
+  value: string;
+  label: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class WebSocketESignatureService {
+  private webSocket: WebSocket = null;
+  private messageSubject = new Subject<EImzaResponse>();
+  private connectionSubject = new BehaviorSubject<boolean>(false);
+  
+  private readonly address: string = '127.0.0.1';
+  private readonly port: string = '5000';
+  private readonly uri: string = '';
+  private kullaniciId: string = '';
+
+  public readonly dllOptions: DllOption[] = [
+    { value: 'akisp11.dll', label: 'Turktrust, Tubitak' },
+    { value: 'eTPKCS11.dll', label: 'E-güven' },
+    { value: 'aetpkss1.dll', label: 'E-Tuğra' }
+  ];
+
+  constructor() { }
+
+  connectAsync(kullaniciId: string): Promise<boolean> {
+    this.kullaniciId = kullaniciId;
+
+    if (this.webSocket && this.webSocket.readyState === WebSocket.OPEN) {
+      console.log('WebSocket zaten bağlı');
+      return Promise.resolve(true);
+    }
+
+    if (this.webSocket) {
+      this.webSocket.close();
+    }
+
+    const path = 'ws://' + this.address + ':' + this.port + '/ws/' + this.uri;
+    const that = this;
+    
+    return new Promise((resolve, reject) => {
+      try {
+        this.webSocket = new WebSocket(path, 'sec-websocket-protocol');
+
+        this.webSocket.onopen = function() {
+          console.log('✅ TurkTrust WebSocket bağlandı:', path);
+          that.connectionSubject.next(true);
+          resolve(true);
+        };
+
+        this.webSocket.onmessage = function(event) {
+          try {
+            const response: EImzaResponse = JSON.parse(event.data);
+            console.log('📨 Mesaj alındı:', response);
+            that.messageSubject.next(response);
+          } catch (error) {
+            console.error('Mesaj parse hatası:', error);
+          }
+        };
+
+        this.webSocket.onerror = function(error) {
+          console.error('❌ WebSocket hatası:', error);
+          that.connectionSubject.next(false);
+          reject(new Error('WebSocket bağlantı hatası'));
+        };
+
+        this.webSocket.onclose = function() {
+          console.log('🔒 WebSocket bağlantısı kapandı');
+          that.connectionSubject.next(false);
+        };
+
+        setTimeout(() => {
+          if (that.webSocket.readyState !== WebSocket.OPEN) {
+            that.webSocket.close();
+            reject(new Error('WebSocket bağlantı zaman aşımı (5 saniye)'));
+          }
+        }, 5000);
+
+      } catch (error) {
+        console.error('WebSocket oluşturma hatası:', error);
+        this.connectionSubject.next(false);
+        reject(error);
+      }
+    });
+  }
+
+  private sendData(stringData: string, islemId: string): void {
+    if (!this.webSocket || this.webSocket.readyState !== WebSocket.OPEN) {
+      throw new Error('WebSocket bağlantısı açık değil');
+    }
+
+    const message = JSON.stringify({
+      data: stringData,
+      kullaniciId: this.kullaniciId,
+      received: '',
+      islemId: islemId,
+      sertifikaId: 'sertifikaId'
+    });
+
+    this.webSocket.send(message);
+    console.log('📤 Mesaj gönderildi:', islemId);
+  }
+
+  getMessages() {
+    return this.messageSubject.asObservable();
+  }
+
+  getConnectionStatus() {
+    return this.connectionSubject.asObservable();
+  }
+
+  disconnect(): void {
+    if (this.webSocket) {
+      console.log('🔒 WebSocket bağlantısı kapatılıyor...');
+      this.webSocket.close();
+      this.webSocket = null;
+      this.connectionSubject.next(false);
+    }
+  }
+
+  sendCardType(dllName: string): void {
+    this.sendData(dllName, '9');
+  }
+
+  signWithCAdESUI(base64Hash: string, useCAdES: boolean = false): void {
+    this.sendData(useCAdES ? 'true' : 'false', '14');
+    this.sendData(base64Hash, '12');
+  }
+}
+```
+
+---
+
+## 📁 Dosya 2: pdf-preview.component.ts
+
+**Konum:** `src/app/components/pdf-preview/pdf-preview.component.ts`
+
+```typescript
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { IFileUploadService } from '../../services/ifileuploadservice';
+import { map } from 'rxjs/operators';
+
+@Component({
+  selector: 'app-pdf-preview',
+  templateUrl: './pdf-preview.component.html',
+  styleUrls: ['./pdf-preview.component.scss']
+})
+export class PdfPreviewComponent implements OnInit {
+
+  @Input() dataId: string;
+  @Input() reportName: string;
+  @Input() zIndex: number = 1000;
+  
+  @Output() onDecision = new EventEmitter<{ dataId: string, decision: 'save' | 'cancel', pdfBytes?: Blob }>();
+  
+  public errorMessage: string;
+  public pdfBytes: Blob;
+  public isLoading: boolean = true;
+  
+  @ViewChild('pdfViewer') public pdfViewer;
+
+  constructor(private fileUploadService: IFileUploadService) { }
+
+  ngOnInit() {
+    if (this.dataId) {
+      this.downloadFile(this.dataId).subscribe(
+        (res) => {
+          this.pdfBytes = res;
+          this.isLoading = false;
+          
+          if (this.pdfViewer) {
+            this.pdfViewer.pdfSrc = res;
+            this.pdfViewer.refresh();
+          }
+        },
+        (err) => {
+          this.errorMessage = 'PDF yüklenirken hata oluştu';
+          this.isLoading = false;
+        }
+      );
+    }
+  }
+
+  private downloadFile(dataId: string): any {
+    const input = { dataId: dataId, mimeType: "application/pdf" };
+    return this.fileUploadService.downloadBinaryData(input.dataId, input.mimeType).pipe(
+      map((result: any) => {
+        return new Blob([result.body]);
+      })
+    );
+  }
+
+  onSave() {
+    this.onDecision.emit({
+      dataId: this.dataId,
+      decision: 'save',
+      pdfBytes: this.pdfBytes
+    });
+  }
+
+  onCancel() {
+    this.onDecision.emit({
+      dataId: this.dataId,
+      decision: 'cancel'
+    });
+  }
+
+}
+```
+
+---
+
+## 📁 Dosya 3: pdf-preview.component.html
+
+**Konum:** `src/app/components/pdf-preview/pdf-preview.component.html`
+
+```html
+<div class="pdf-preview-popup" [style.z-index]="zIndex">
+  
+  <div class="overlay"></div>
+  
+  <div class="pdf-container">
+    
+    <div class="header">
+      <h3>{{ reportName || 'PDF İnceleme' }}</h3>
+    </div>
+
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner-border text-primary"></div>
+      <p>PDF yükleniyor...</p>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <i class="fa fa-exclamation-circle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <div class="pdf-viewer-container" *ngIf="!isLoading && !errorMessage">
+      <pdf-viewer 
+        #pdfViewer
+        [render-text]="true"
+        [original-size]="false"
+        [show-all]="true"
+        style="width: 100%; height: 500px;">
+      </pdf-viewer>
+    </div>
+
+    <div class="action-buttons" *ngIf="!isLoading">
+      <button class="btn btn-success" (click)="onSave()">
+        <i class="fa fa-check"></i>
+        Kaydet
+      </button>
+
+      <button class="btn btn-secondary" (click)="onCancel()">
+        <i class="fa fa-times"></i>
+        Vazgeç
+      </button>
+    </div>
+
+  </div>
+</div>
+```
+
+---
+
+## 📁 Dosya 4: pdf-preview.component.scss
+
+**Konum:** `src/app/components/pdf-preview/pdf-preview.component.scss`
+
+```scss
+.pdf-preview-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  
+  .pdf-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    
+    .header {
+      padding: 20px;
+      background: #007bff;
+      color: white;
+      border-bottom: 1px solid #ddd;
+      
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+    }
+    
+    .loading {
+      padding: 40px;
+      text-align: center;
+      
+      .spinner-border {
+        width: 3rem;
+        height: 3rem;
+      }
+      
+      p {
+        margin-top: 15px;
+        color: #666;
+      }
+    }
+    
+    .alert {
+      margin: 20px;
+      padding: 15px;
+      border-radius: 4px;
+      
+      &.alert-danger {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+      }
+      
+      i {
+        margin-right: 8px;
+      }
+    }
+    
+    .pdf-viewer-container {
+      flex: 1;
+      overflow: auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .action-buttons {
+      padding: 20px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      background: white;
+      
+      .btn {
+        padding: 10px 24px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        
+        i {
+          font-size: 1rem;
+        }
+        
+        &.btn-success {
+          background: #28a745;
+          color: white;
+          
+          &:hover {
+            background: #218838;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+          }
+        }
+        
+        &.btn-secondary {
+          background: #6c757d;
+          color: white;
+          
+          &:hover {
+            background: #545b62;
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+## 📁 Dosya 5: report-list.component.ts
+
+**Konum:** `src/app/components/report-list/report-list.component.ts`
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { IFileUploadService } from '../../services/ifileuploadservice';
+import { WebSocketESignatureService } from '../../services/websocket-esignature.service';
+
+interface ReportItem {
+  id: number;
+  name: string;
+  dataId: string;
+  selected: boolean;
+  approved?: boolean;
+  pdfBytes?: Blob;
+  signedPdfBase64?: string;
+  showPreview?: boolean;
+}
+
+@Component({
+  selector: 'app-report-list',
+  templateUrl: './report-list.component.html',
+  styleUrls: ['./report-list.component.scss']
+})
+export class ReportListComponent implements OnInit {
+
+  reports: ReportItem[] = [
+    { id: 1, name: 'Rapor 1', dataId: 'data-1', selected: false },
+    { id: 2, name: 'Rapor 2', dataId: 'data-2', selected: false },
+    { id: 3, name: 'Rapor 3', dataId: 'data-3', selected: false },
+    { id: 4, name: 'Rapor 4', dataId: 'data-4', selected: false },
+  ];
+
+  reviewingReports: ReportItem[] = [];
+  approvedReports: ReportItem[] = [];
+  
+  isReviewMode: boolean = false;
+  isSigningInProgress: boolean = false;
+  signingProgress: string = '';
+  errorMessage: string = '';
+  successMessage: string = '';
+
+  constructor(
+    private fileUploadService: IFileUploadService,
+    private wsESignatureService: WebSocketESignatureService
+  ) { }
+
+  ngOnInit() { }
+
+  getSelectedCount(): number {
+    return this.reports.filter(r => r.selected).length;
+  }
+
+  getApprovedCount(): number {
+    return this.approvedReports.length;
+  }
+
+  onReviewSelected() {
+    const selected = this.reports.filter(r => r.selected);
+    
+    if (selected.length === 0) {
+      alert('Lütfen en az bir rapor seçin');
+      return;
+    }
+
+    console.log('📋 ' + selected.length + ' rapor seçildi, inceleme başlıyor...');
+    
+    this.isReviewMode = true;
+    this.reviewingReports = selected.slice();
+    this.approvedReports = [];
+    
+    this.reviewingReports.forEach((report, index) => {
+      report.showPreview = true;
+    });
+  }
+
+  onPdfDecision(event: { dataId: string, decision: 'save' | 'cancel', pdfBytes?: Blob }) {
+    const report = this.reviewingReports.find(r => r.dataId === event.dataId);
+    
+    if (!report) return;
+
+    report.showPreview = false;
+
+    if (event.decision === 'save') {
+      report.approved = true;
+      report.pdfBytes = event.pdfBytes;
+      this.approvedReports.push(report);
+      console.log('✅ ' + report.name + ' onaylandı');
+    } else {
+      report.approved = false;
+      report.selected = false;
+      console.log('❌ ' + report.name + ' vazgeçildi');
+    }
+
+    const allReviewed = this.reviewingReports.every(r => !r.showPreview);
+    
+    if (allReviewed) {
+      this.onReviewCompleted();
+    }
+  }
+
+  private onReviewCompleted() {
+    const that = this;
+    console.log('📊 İnceleme tamamlandı: ' + this.approvedReports.length + '/' + this.reviewingReports.length + ' onaylandı');
+    
+    setTimeout(() => {
+      that.isReviewMode = false;
+    }, 500);
+    
+    if (this.approvedReports.length === 0) {
+      alert('Hiçbir rapor onaylanmadı');
+    } else {
+      this.successMessage = this.approvedReports.length + ' rapor onaylandı. "Seçilenleri Onayla ve İmzala" butonuna tıklayarak imzalayabilirsiniz.';
+      
+      setTimeout(() => {
+        that.successMessage = '';
+      }, 5000);
+    }
+  }
+
+  onApproveAndSign() {
+    const that = this;
+    
+    if (this.approvedReports.length === 0) {
+      alert('Onaylanmış rapor yok');
+      return;
+    }
+
+    this.isSigningInProgress = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.signingProgress = '';
+
+    console.log('🔌 WebSocket bağlantısı kuruluyor...');
+    this.signingProgress = 'WebSocket bağlantısı kuruluyor...';
+    
+    this.wsESignatureService.connectAsync('angular_user_' + Date.now()).then(
+      function(connected) {
+        if (!connected) {
+          throw new Error('WebSocket bağlantısı kurulamadı');
+        }
+
+        console.log('✅ WebSocket bağlandı');
+        console.log('📄 PDF\'ler base64\'e çevriliyor...');
+        that.signingProgress = that.approvedReports.length + ' PDF base64\'e çevriliyor...';
+        
+        return that.convertPdfsToBase64();
+      }
+    ).then(
+      function(pdfBase64Array) {
+        const combinedPdfBase64 = pdfBase64Array.join(';');
+        console.log('📦 ' + pdfBase64Array.length + ' PDF birleştirildi, toplam uzunluk: ' + combinedPdfBase64.length);
+
+        that.wsESignatureService.sendCardType('akisp11.dll');
+
+        that.signingProgress = 'PDF\'ler imzalanıyor... (Lütfen PIN giriniz)';
+        console.log('🔐 İmzalama başlatılıyor...');
+        
+        return that.waitForSignature(combinedPdfBase64);
+      }
+    ).then(
+      function(signedData) {
+        const signedPdfArray = signedData.split(';');
+        console.log('✅ ' + signedPdfArray.length + ' imzalı PDF alındı');
+
+        if (signedPdfArray.length !== that.approvedReports.length) {
+          throw new Error('İmzalı PDF sayısı eşleşmiyor: ' + signedPdfArray.length + ' !== ' + that.approvedReports.length);
+        }
+
+        for (let i = 0; i < that.approvedReports.length; i++) {
+          that.approvedReports[i].signedPdfBase64 = signedPdfArray[i];
+        }
+
+        that.signingProgress = 'İmzalı PDF\'ler sunucuya yükleniyor...';
+        return that.uploadSignedPdfs();
+      }
+    ).then(
+      function() {
+        that.isSigningInProgress = false;
+        that.successMessage = '✅ ' + that.approvedReports.length + ' PDF başarıyla imzalandı ve yüklendi!';
+        console.log('🎉 Tüm işlemler tamamlandı!');
+
+        that.wsESignatureService.disconnect();
+
+        setTimeout(() => {
+          that.resetSelection();
+        }, 3000);
+      }
+    ).catch(
+      function(error) {
+        console.error('❌ Hata:', error);
+        that.errorMessage = error.message || 'İmzalama işlemi başarısız';
+        that.isSigningInProgress = false;
+        that.wsESignatureService.disconnect();
+      }
+    );
+  }
+
+  private convertPdfsToBase64(): Promise<string[]> {
+    const that = this;
+    const promises = [];
+    
+    for (let i = 0; i < this.approvedReports.length; i++) {
+      const report = this.approvedReports[i];
+      promises.push(that.blobToBase64(report.pdfBytes));
+    }
+    
+    return Promise.all(promises);
+  }
+
+  private waitForSignature(pdfBase64: string): Promise<string> {
+    const that = this;
+    
+    return new Promise((resolve, reject) => {
+      const subscription = that.wsESignatureService.getMessages().subscribe(
+        (response) => {
+          if (response.hataMesaji) {
+            subscription.unsubscribe();
+            reject(new Error(response.hataMesaji));
+          } else if (response.islemId === '12' || response.islemId === '2') {
+            subscription.unsubscribe();
+            resolve(response.data);
+          }
+        },
+        (error) => {
+          subscription.unsubscribe();
+          reject(error);
+        }
+      );
+
+      setTimeout(() => {
+        that.wsESignatureService.signWithCAdESUI(pdfBase64, false);
+      }, 500);
+
+      setTimeout(() => {
+        subscription.unsubscribe();
+        reject(new Error('İmzalama zaman aşımına uğradı (60 saniye)'));
+      }, 60000);
+    });
+  }
+
+  private uploadSignedPdfs(): Promise<void> {
+    const that = this;
+    console.log('📤 ' + this.approvedReports.length + ' imzalı PDF sunucuya yükleniyor...');
+    
+    let promise = Promise.resolve();
+    
+    for (let i = 0; i < this.approvedReports.length; i++) {
+      const index = i;
+      const report = this.approvedReports[index];
+      
+      promise = promise.then(function() {
+        that.signingProgress = 'Yükleniyor: ' + (index + 1) + '/' + that.approvedReports.length + ' - ' + report.name;
+        
+        const formData = new FormData();
+        const blob = that.b64toBlob(report.signedPdfBase64, 'application/pdf');
+        formData.append('PdfBytes', blob);
+        formData.append('DataId', report.dataId);
+        
+        return that.fileUploadService.uploadFile(formData).toPromise().then(function() {
+          console.log('✅ ' + report.name + ' yüklendi');
+        });
+      });
+    }
+    
+    return promise.then(function() {
+      console.log('✅ Tüm PDF\'ler yüklendi');
+    });
+  }
+
+  private resetSelection() {
+    this.reports.forEach(r => {
+      r.selected = false;
+      r.approved = false;
+      r.pdfBytes = null;
+      r.signedPdfBase64 = null;
+      r.showPreview = false;
+    });
+    this.reviewingReports = [];
+    this.approvedReports = [];
+    this.isReviewMode = false;
+  }
+
+  getZIndex(index: number): number {
+    return 1000 + index;
+  }
+
+  private blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        const base64 = base64String.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  private b64toBlob(b64Data: string, contentType: string, sliceSize: number): Blob {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+    
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+    
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+      const byteNumbers = new Array(slice.length);
+      
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    
+    return new Blob(byteArrays, { type: contentType });
+  }
+
+}
+```
+
+---
+
+## 📁 Dosya 6: report-list.component.html
+
+**Konum:** `src/app/components/report-list/report-list.component.html`
+
+```html
+<div class="report-list-container">
+  <h2>Rapor Listesi</h2>
+
+  <div class="report-list">
+    <div class="report-item" *ngFor="let report of reports">
+      <label>
+        <input 
+          type="checkbox" 
+          [(ngModel)]="report.selected"
+          [disabled]="isSigningInProgress || isReviewMode">
+        <span [class.approved]="report.approved === true" 
+              [class.rejected]="report.approved === false">
+          {{ report.name }}
+          <span *ngIf="report.approved === true" class="badge badge-success">✓ Onaylandı</span>
+          <span *ngIf="report.approved === false" class="badge badge-secondary">✗ Vazgeçildi</span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    <i class="fa fa-exclamation-circle"></i>
+    {{ errorMessage }}
+  </div>
+
+  <div class="alert alert-success" *ngIf="successMessage">
+    <i class="fa fa-check-circle"></i>
+    {{ successMessage }}
+  </div>
+
+  <div class="alert alert-info" *ngIf="signingProgress">
+    <i class="fa fa-spinner fa-spin"></i>
+    {{ signingProgress }}
+  </div>
+
+  <div class="review-summary" *ngIf="approvedReports.length > 0 && !isReviewMode">
+    <h4>İnceleme Sonuçları:</h4>
+    <p>
+      <strong>Onaylanan:</strong> {{ getApprovedCount() }} rapor hazır
+    </p>
+  </div>
+
+  <div class="action-buttons">
+    <button 
+      class="btn btn-primary"
+      (click)="onReviewSelected()"
+      [disabled]="getSelectedCount() === 0 || isSigningInProgress || isReviewMode">
+      <i class="fa fa-eye"></i>
+      Seçilenleri İncele ({{ getSelectedCount() }})
+    </button>
+
+    <button 
+      class="btn btn-success"
+      (click)="onApproveAndSign()"
+      [disabled]="getApprovedCount() === 0 || isSigningInProgress || isReviewMode">
+      <i class="fa fa-signature"></i>
+      Seçilenleri Onayla ve İmzala ({{ getApprovedCount() }})
+      <span class="spinner-border spinner-border-sm ml-2" *ngIf="isSigningInProgress"></span>
+    </button>
+  </div>
+
+</div>
+
+<app-pdf-preview 
+  *ngFor="let report of reviewingReports; let i = index"
+  [dataId]="report.dataId"
+  [reportName]="report.name"
+  [zIndex]="getZIndex(i)"
+  (onDecision)="onPdfDecision($event)"
+  [hidden]="!report.showPreview">
+</app-pdf-preview>
+```
+
+---
+
+## 📁 Dosya 7: report-list.component.scss
+
+**Konum:** `src/app/components/report-list/report-list.component.scss`
+
+```scss
+.report-list-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .report-list {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    .report-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin: 0;
+
+        input[type="checkbox"] {
+          margin-right: 12px;
+          width: 18px;
+          height: 18px;
+          cursor: pointer;
+
+          &:disabled {
+            cursor: not-allowed;
+          }
+        }
+
+        span {
+          font-size: 1rem;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          &.approved {
+            color: #28a745;
+            font-weight: 500;
+          }
+
+          &.rejected {
+            color: #6c757d;
+            text-decoration: line-through;
+          }
+
+          .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+
+            &.badge-success {
+              background: #28a745;
+              color: white;
+            }
+
+            &.badge-secondary {
+              background: #6c757d;
+              color: white;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &.alert-danger {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    &.alert-success {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    &.alert-info {
+      background: #d1ecf1;
+      border: 1px solid #bee5eb;
+      color: #0c5460;
+    }
+  }
+
+  .review-summary {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    h4 {
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+      color: #856404;
+    }
+
+    p {
+      margin: 0;
+      color: #856404;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        font-size: 1rem;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      &.btn-primary {
+        background: #007bff;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background: #0056b3;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+      }
+
+      &.btn-success {
+        background: #28a745;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background: #218838;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+      }
+
+      .spinner-border {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.15rem;
+      }
+    }
+  }
+}
+```
+
+---
+
+## 📁 Dosya 8: app.module.ts
+
+**Konum:** `src/app/app.module.ts`
+
+```typescript
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
+import { AppComponent } from './app.component';
+import { ReportListComponent } from './components/report-list/report-list.component';
+import { PdfPreviewComponent } from './components/pdf-preview/pdf-preview.component';
+
+// Services
+import { WebSocketESignatureService } from './services/websocket-esignature.service';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    ReportListComponent,
+    PdfPreviewComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    PdfViewerModule
+  ],
+  providers: [
+    WebSocketESignatureService
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+---
+
+## 📁 Dosya 9: mock-websocket-server.js
+
+**Konum:** Proje root klasöründe (Angular projesinin dışında)
+
+```javascript
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 5000 });
+
+console.log('🚀 Mock TurkTrust WebSocket Server başlatıldı: ws://127.0.0.1:5000');
+
+wss.on('connection', (ws) => {
+  console.log('✅ Yeni bağlantı kuruldu');
+
+  ws.on('message', (message) => {
+    try {
+      const data = JSON.parse(message);
+      console.log('📨 Gelen mesaj:', data);
+
+      let response = {
+        data: '',
+        islemId: data.islemId,
+        kullaniciId: data.kullaniciId,
+        hataMesaji: '',
+        sertifikaId: data.sertifikaId || '',
+        akilliKartIsim: 'Test Akıllı Kart'
+      };
+
+      // İşlem tipine göre yanıt
+      switch (data.islemId) {
+        case '1': // Bağlantı testi
+          response.data = 'Bağlantı başarılı!';
+          break;
+          
+        case '9': // Kart tipi
+          response.data = 'Kart kütüphanesi ayarlandı: ' + data.data;
+          break;
+          
+        case '14': // CAdES tercihi
+          response.data = 'CAdES tercihi kaydedildi';
+          break;
+          
+        case '12': // İmzalama
+        case '2':
+          // Gelen veriyi ; ile ayır
+          const inputPdfs = data.data.split(';');
+          console.log('📝 ' + inputPdfs.length + ' PDF imzalanıyor...');
+          
+          // Her PDF için mock imzalı veri oluştur
+          const signedPdfs = inputPdfs.map((pdf, index) => {
+            return btoa('MOCK_SIGNED_PDF_' + (index + 1) + '_' + Date.now());
+          });
+          
+          // ; ile birleştir
+          response.data = signedPdfs.join(';');
+          console.log('✅ ' + signedPdfs.length + ' PDF imzalandı');
+          break;
+          
+        default:
+          response.data = 'İşlem tamamlandı';
+      }
+
+      console.log('📤 Gönderilen yanıt:', {
+        islemId: response.islemId,
+        dataLength: response.data.length
+      });
+      
+      ws.send(JSON.stringify(response));
+
+    } catch (error) {
+      console.error('❌ Hata:', error);
+      ws.send(JSON.stringify({
+        data: '',
+        hataMesaji: 'Sunucu hatası: ' + error.message
+      }));
+    }
+  });
+
+  ws.on('close', () => {
+    console.log('❌ Bağlantı kapandı');
+  });
+});
+```
+
+---
+
+## 📁 Dosya 10: Kullanım Kılavuzu (README.md)
+
+```markdown
+# 📚 Toplu PDF İmzalama Sistemi - Kullanım Kılavuzu
+
+## 🚀 Kurulum
+
+### 1. Paketleri Yükle
+```bash
+npm install ng2-pdf-viewer --save
+npm install ws --save-dev
+```
+
+### 2. Dosya Yapısı
+```
+src/app/
+├── services/
+│   └── websocket-esignature.service.ts
+├── components/
+│   ├── pdf-preview/
+│   │   ├── pdf-preview.component.ts
+│   │   ├── pdf-preview.component.html
+│   │   └── pdf-preview.component.scss
+│   └── report-list/
+│       ├── report-list.component.ts
+│       ├── report-list.component.html
+│       └── report-list.component.scss
+└── app.module.ts
+
+mock-websocket-server.js (proje root)
+```
+
+### 3. Component Oluştur
+```bash
+ng generate component components/pdf-preview
+ng generate component components/report-list
+```
+
+### 4. Mock Server Çalıştır
+```bash
+# Terminal 1: Mock WebSocket Server
+node mock-websocket-server.js
+
+# Terminal 2: Angular
+ng serve
+```
+
+## 🎯 Kullanım Akışı
+
+### Adım 1: İnceleme
+1. Listeden PDF'leri seç (checkbox)
+2. "Seçilenleri İncele" butonuna tıkla
+3. PDF'ler üst üste popup olarak açılır
+4. Her birinde "Kaydet" veya "Vazgeç" seç
+5. Tüm kararlar verildikten sonra sonuç gösterilir
+
+### Adım 2: Toplu İmzalama
+1. "Seçilenleri Onayla ve İmzala" butonuna tıkla
+2. WebSocket bağlantısı kurulur
+3. TurkTrust PIN ekranı açılır (1 kez)
+4. Tüm PDF'ler birlikte imzalanır
+5. İmzalı PDF'ler sırayla sunucuya yüklenir
+6. Başarı mesajı gösterilir
+
+## 🔄 Veri Akışı
+
+```
+PDF1, PDF2, PDF3 Seçildi
+    ↓
+İNCELEME (Popup'lar üst üste)
+    ↓
+PDF1: Kaydet ✅
+PDF2: Vazgeç ❌  
+PDF3: Kaydet ✅
+    ↓
+TOPLU İMZALAMA
+    ↓
+Base64'e çevir: [pdf1_base64, pdf3_base64]
+Birleştir: "pdf1_base64;pdf3_base64"
+    ↓
+WebSocket'e gönder
+    ↓
+TurkTrust PIN iste (1 kez)
+    ↓
+İmzalı veri al: "signed1;signed3"
+Ayır: [signed1, signed3]
+    ↓
+FOR döngüsü ile yükle:
+  - Upload signed1 ✅
+  - Upload signed3 ✅
+    ↓
+BAŞARILI ✅
+```
+
+## 🧪 Test Senaryoları
+
+### Test 1: Tek PDF
+```
+1. 1 PDF seç
+2. İncele → Kaydet
+3. Onayla ve İmzala
+4. PIN gir
+5. Başarılı ✅
+```
+
+### Test 2: Çoklu PDF (Hepsi Onaylandı)
+```
+1. 3 PDF seç
+2. İncele → PDF1 Kaydet, PDF2 Kaydet, PDF3 Kaydet
+3. Onayla ve İmzala
+4. PIN gir (1 kez)
+5. 3 PDF birlikte imzalandı ✅
+```
+
+### Test 3: Çoklu PDF (Bazıları Reddedildi)
+```
+1. 3 PDF seç
+2. İncele → PDF1 Kaydet, PDF2 Vazgeç, PDF3 Kaydet
+3. Onayla ve İmzala
+4. PIN gir (1 kez)
+5. 2 PDF birlikte imzalandı ✅
+```
+
+## 📊 Console Logları
+
+```
+📋 3 rapor seçildi, inceleme başlıyor...
+✅ Rapor 1 onaylandı
+❌ Rapor 2 vazgeçildi
+✅ Rapor 3 onaylandı
+📊 İnceleme tamamlandı: 2/3 onaylandı
+
+🔌 WebSocket bağlantısı kuruluyor...
+✅ WebSocket bağlandı
+📄 PDF'ler base64'e çevriliyor...
+📦 2 PDF birleştirildi, toplam uzunluk: 123456
+🔐 İmzalama başlatılıyor...
+📨 Mesaj alındı: { islemId: '12' }
+✅ 2 imzalı PDF alındı
+📤 2 imzalı PDF sunucuya yükleniyor...
+Yükleniyor: 1/2 - Rapor 1
+✅ Rapor 1 yüklendi
+Yükleniyor: 2/2 - Rapor 3
+✅ Rapor 3 yüklendi
+✅ Tüm PDF'ler yüklendi
+🎉 Tüm işlemler tamamlandı!
+```
+
+## ⚠️ Önemli Notlar
+
+1. **Angular 7 Uyumlu:** Tüm kod Angular 7.0.3 için yazılmıştır
+2. **Modal Yok:** Component selector kullanılarak popup görünümü
+3. **Z-index:** PDF'ler üst üste görünür (1000, 1001, 1002...)
+4. **Tek PIN:** Tüm PDF'ler için sadece 1 kez PIN girilir
+5. **Noktalı virgül (;):** PDF'ler birleştirilirken ayırıcı
+6. **Promise Chain:** Angular 7 için async/await yerine .then() kullanıldı
+
+## 🎉 Tamamlandı!
+
+Sistem hazır! Test edin ve başarılarla kullanın! 🚀
+```
+
+---
+
+## 🎯 ÖZET
+
+Tüm dosyalar Angular 7 uyumlu olarak hazır:
+
+✅ **WebSocket Servisi** - Promise tabanlı
+✅ **PDF Preview Component** - Popup görünümü  
+✅ **Report List Component** - Ana akış yönetimi  
+✅ **SCSS** - Modern tasarım  
+✅ **Mock Server** - Test için  
+✅ **Module** - FormsModule + PdfViewerModule  
+✅ **Kılavuz** - Kullanım talimatları  
+
+**Özellikler:**
+- ✅ Modal yok, component selector
+- ✅ Üst üste popup (z-index)
+- ✅ Toplu imzalama (;)
