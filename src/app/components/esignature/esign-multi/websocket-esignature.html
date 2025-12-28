@@ -1,0 +1,61 @@
+<div class="websocket-eimza-popup">
+  
+  <!-- Overlay -->
+  <div class="overlay"></div>
+  
+  <!-- PDF Container -->
+  <div class="pdf-container">
+    
+    <!-- Başlık ve Progress -->
+    <div class="header">
+      <h3>PDF İnceleme</h3>
+      <div class="progress-info">
+        <span class="progress-badge">{{ getProgress() }}</span>
+        <span class="report-info">{{ getCurrentReportInfo() }}</span>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-container" *ngIf="isPdfLoading">
+      <div class="spinner-border text-primary"></div>
+      <p>PDF yükleniyor...</p>
+    </div>
+
+    <!-- Hata Mesajı -->
+    <div class="alert alert-danger" *ngIf="pdfError">
+      <i class="fa fa-exclamation-circle"></i>
+      {{ pdfError }}
+    </div>
+
+    <!-- PDF Viewer -->
+    <div class="pdf-viewer-container" *ngIf="!isPdfLoading && !pdfError">
+      <pdf-viewer 
+        #pdfViewer
+        [render-text]="true"
+        [original-size]="false"
+        [show-all]="true"
+        style="width: 100%; height: 500px;">
+      </pdf-viewer>
+    </div>
+
+    <!-- Butonlar -->
+    <div class="action-buttons" *ngIf="!isPdfLoading">
+      <button 
+        class="btn btn-success" 
+        (click)="onSave()"
+        [disabled]="pdfError">
+        <i class="fa fa-check"></i>
+        Kaydet
+      </button>
+
+      <button 
+        class="btn btn-secondary" 
+        (click)="onCancel()"
+        [disabled]="pdfError">
+        <i class="fa fa-times"></i>
+        Vazgeç
+      </button>
+    </div>
+
+  </div>
+</div>
